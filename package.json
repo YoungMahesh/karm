@@ -1,14 +1,20 @@
 {
   "name": "karm",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "format": "npx prettier --write src/ package.json",
+    "git1": "git add ."
   },
+  "pre-commit": [
+    "format",
+    "git1"
+  ],
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.4",
     "@prisma/client": "^4.5.0",
@@ -34,6 +40,7 @@
     "eslint": "8.22.0",
     "eslint-config-next": "13.0.0",
     "postcss": "^8.4.14",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "prisma": "^4.5.0",

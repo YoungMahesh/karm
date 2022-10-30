@@ -31,7 +31,7 @@ export default function Guest() {
                   postM.mutate({
                     name1: session.user?.name as string,
                     message1: message,
-                  }, );
+                  });
                   setMessage("");
                 }}
               >
@@ -66,15 +66,21 @@ export default function Guest() {
   );
 }
 
-const Messages = ({data, isLoading}: {data: Guestbook[], isLoading: boolean}) => {
-
+const Messages = ({
+  data,
+  isLoading,
+}: {
+  data: Guestbook[];
+  isLoading: boolean;
+}) => {
   if (isLoading) return <p>Loading...</p>;
   return (
     <div className="pt-10">
       {data?.map((message) => (
         <div key={message.id}>
-          <p>{message.name}</p>
-          <p>{message.message}</p>
+          <p>
+            {message.name}: {message.message}
+          </p>
         </div>
       ))}
     </div>
