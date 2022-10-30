@@ -4,7 +4,7 @@ import { trpc } from "../utils/trpc";
 import Button1 from "./Button1";
 
 export default function CreateTimer() {
-  const { refetch } = trpc.timer.getAll.useQuery();
+  const { refetch } = trpc.timer.getAllIds.useQuery();
   const createT = trpc.timer.createTimer.useMutation();
 
   const [title, setTitle] = useState("");

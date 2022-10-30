@@ -61,11 +61,22 @@ export const timerRouter = router({
       });
     }),
 
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.timer.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
+  getOne: protectedProcedure
+    .input(
+      z.object({
+        timerId: z.string(),
+      })
+    )
+    .query((req) => {
+      return req.ctx.prisma.timer.findUnique({
+        where: { id: req.input.timerId },
+      });
+    }),
+
+  getAllIds: protectedProcedure.query((req) => {
+    return req.ctx.prisma.timer.findMany({
+      where: { userId: req.ctx.session.user.id },
+      select: { id: true },
     });
   }),
 
