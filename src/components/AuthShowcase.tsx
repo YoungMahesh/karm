@@ -1,7 +1,9 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function AuthShowcase() {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+
+  if (status === "loading") return <p className="text-center">Loading...</p>;
 
   return (
     <div className="flex flex-col items-center justify-center gap-2">

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { currTime } from "../../../utils/timer";
 import { protectedProcedure, router } from "../trpc";
 
 export const timerRouter = router({
@@ -17,7 +18,7 @@ export const timerRouter = router({
           description: req.input.description,
           totalTime: req.input.totalTime,
           timeRemaining: req.input.totalTime,
-          updatedAt: Math.floor(new Date().getTime() / 1000),
+          updatedAt: currTime(),
           isRunning: false,
           userId: req.ctx.session.user.id,
         },
@@ -37,7 +38,7 @@ export const timerRouter = router({
         },
         data: {
           isRunning: true,
-          updatedAt: Math.floor(new Date().getTime() / 1000),
+          updatedAt: currTime(),
         },
       });
     }),

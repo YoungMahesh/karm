@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -66,15 +60,8 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Guestbook {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  name      String
-  message   String
-}
-
 model Timer {
-  id            String   @id @default(cuid())
+  id            String  @id @default(cuid())
   title         String
   description   String?
   totalTime     Int
@@ -82,6 +69,7 @@ model Timer {
   updatedAt     Int
   isRunning     Boolean
   userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, title])
 }
