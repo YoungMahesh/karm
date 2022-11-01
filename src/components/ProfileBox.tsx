@@ -4,8 +4,10 @@ import { trpc } from "../utils/trpc";
 export default function ProfileBox() {
   const { data, isLoading, refetch } = trpc.profile.getProfile.useQuery();
   const updateN = trpc.profile.updateName.useMutation();
+  const deleteA = trpc.profile.deleteAccount.useMutation();
   const [name1, setName1] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (data && data.name) {
@@ -23,6 +25,14 @@ export default function ProfileBox() {
     refetch();
     alert("updated name");
     setIsUpdating(false);
+  };
+
+  const deleteAccount = async () => {
+    setIsDeleting(true);
+    await deleteA.mutateAsync();
+    setIsDeleting(false);
+    alert("You account deleted successfully");
+    window.location.href = "/";
   };
 
   return (
@@ -51,7 +61,15 @@ export default function ProfileBox() {
           <button className="loading btn" />
         ) : (
           <button onClick={updateName} className="btn">
-            Update
+            Update Profile
+          </button>
+        )}
+
+        {isDeleting ? (
+          <button className="loading btn-error btn mt-4" />
+        ) : (
+          <button className="btn-error btn mt-4" onClick={deleteAccount}>
+            Delete Account
           </button>
         )}
       </div>

@@ -44,7 +44,7 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -68,8 +68,8 @@ model Timer {
   timeRemaining Int
   updatedAt     Int
   isRunning     Boolean
-  userId        String
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userEmail     String
+  user          User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
 
-  @@unique([userId, title])
+  @@unique([userEmail, title])
 }

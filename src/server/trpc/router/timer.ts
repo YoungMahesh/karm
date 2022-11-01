@@ -20,7 +20,7 @@ export const timerRouter = router({
           timeRemaining: req.input.totalTime,
           updatedAt: currTime(),
           isRunning: false,
-          userId: req.ctx.session.user.id,
+          userEmail: req.ctx.session.user.email,
         },
       });
     }),
@@ -76,7 +76,7 @@ export const timerRouter = router({
 
   getAllIds: protectedProcedure.query((req) => {
     return req.ctx.prisma.timer.findMany({
-      where: { userId: req.ctx.session.user.id },
+      where: { userEmail: req.ctx.session.user.email },
       select: { id: true },
     });
   }),

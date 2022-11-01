@@ -5,7 +5,7 @@ export const profileRouter = router({
   getProfile: protectedProcedure.query(async (req) => {
     const user = await req.ctx.prisma.user.findUnique({
       where: {
-        id: req.ctx.session.user.id,
+        email: req.ctx.session.user.email,
       },
     });
     if (!user) {
@@ -18,11 +18,18 @@ export const profileRouter = router({
     .mutation(async (req) => {
       return req.ctx.prisma.user.update({
         where: {
-          id: req.ctx.session.user.id,
+          email: req.ctx.session.user.email,
         },
         data: {
           name: req.input.name,
         },
       });
     }),
+  deleteAccount: protectedProcedure.mutation(async (req) => {
+    return req.ctx.prisma.user.delete({
+      where: {
+        email: req.ctx.session.user.email,
+      },
+    });
+  }),
 });
