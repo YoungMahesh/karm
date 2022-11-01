@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { hoursToSeconds } from "../utils/timer";
 import { trpc } from "../utils/trpc";
-import Button1 from "./Button1";
 
 export default function CreateTimer() {
   const { refetch } = trpc.timer.getAllIds.useQuery();
@@ -31,7 +30,7 @@ export default function CreateTimer() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2">
+    <div className="mt-4 flex flex-col items-center justify-center gap-2">
       <h1 className="text-2xl text-blue-500">Create Timer</h1>
       <div className="form-control">
         <label className="input-group mb-2">

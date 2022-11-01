@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
+import logo from "../../public/karm.svg";
 
 export default function AuthShowcase() {
   const { data: sessionData, status } = useSession();
@@ -13,12 +14,12 @@ export default function AuthShowcase() {
   return (
     <header className="flex  items-center justify-between p-2">
       <Image
-        src="/karm.svg"
-        height={90}
+        src={logo}
         width={90}
         alt="Karm"
         className="cursor-pointer rounded"
         onClick={() => router.push("/")}
+        priority
       />
 
       <div>
