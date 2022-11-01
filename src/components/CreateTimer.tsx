@@ -9,60 +9,72 @@ export default function CreateTimer() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [totalTime, setTotalTime] = useState(0);
+  const [totalTime, setTotalTime] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const clearCreateForm = () => {
+    setTitle("");
+    setDescription("");
+    setTotalTime("");
+  };
 
   const createTimer = async () => {
+    setIsCreating(true);
     await createT.mutateAsync({
       title,
       description,
-      totalTime: hoursToSeconds(totalTime),
+      totalTime: hoursToSeconds(parseFloat(totalTime)),
     });
-    refetch();
+    await refetch();
+    clearCreateForm();
+    setIsCreating(false);
   };
 
   return (
     <div className="flex flex-col items-center justify-center gap-2">
       <h1 className="text-2xl text-blue-500">Create Timer</h1>
-      <form>
-        <div>
-          <label htmlFor="name">Title: </label>
+      <div className="form-control">
+        <label className="input-group mb-2">
+          <span>Title</span>
           <input
-            className="border-2 border-black p-1"
             type="text"
-            name="name"
-            id="name"
-            required
+            placeholder="Study Physics"
+            className="input-bordered input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description: </label>
-          <input
-            className="border-2 border-black p-1"
-            type="text"
-            name="description"
-            id="description"
             required
+          />
+        </label>
+        <label className="input-group mb-2">
+          <span>Description</span>
+          <input
+            type="text"
+            placeholder="Quantum Mechanics"
+            className="input-bordered input"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="totalTime">Total Time (in Hours): </label>
-          <input
-            className="border-2 border-black p-1"
-            type="number"
-            name="totalTime"
-            id="totalTime"
             required
-            value={totalTime}
-            onChange={(e) => setTotalTime(parseInt(e.target.value))}
           />
-        </div>
-
-        <Button1 onClick={createTimer}>Create </Button1>
-      </form>
+        </label>
+        <label className="input-group mb-2">
+          <span>Total Time (in Hours)</span>
+          <input
+            type="text"
+            placeholder="11.5"
+            className="input-bordered input"
+            value={totalTime}
+            onChange={(e) => setTotalTime(e.target.value)}
+            required
+          />
+        </label>
+        {isCreating ? (
+          <button className="loading btn" />
+        ) : (
+          <button onClick={createTimer} className="btn">
+            Create
+          </button>
+        )}
+      </div>
     </div>
   );
 }
