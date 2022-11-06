@@ -8,14 +8,16 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const startT = trpc.timer.startTimer.useMutation();
   const stopT = trpc.timer.stopTimer.useMutation();
   const deleteT = trpc.timer.deleteTimer.useMutation();
+  const createTS = trpc.timerSessions.createTimerSession.useMutation();
   const [remTime, setRemTime] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [h1, m1, s1] = useMemo(() => {
     if (remTime <= 0) return [0, 0, 0];
-    if (data && data.isRunning) {
-      setTimeout(() => setRemTime(remTime - 1), 1000);
+    if (data) {
+      if (data.isRunning) setTimeout(() => setRemTime(remTime - 1), 1000);
+      else setRemTime(data.timeRemaining);
     }
     console.log(Math.floor(Date.now() / 1000), remTime);
     return secondsToHours1(remTime);
@@ -51,7 +53,23 @@ export default function TimerBox({ timerId }: { timerId: string }) {
 
   const stopTimer = async () => {
     setIsUpdating(true);
-    await stopT.mutateAsync({ timerId: data.id, timeRemaining: remTime });
+    const _startTime = data.updatedAt;
+    const _endTime = currTime();
+    const _timePassed = _endTime - _startTime;
+    const _timeRemaining =
+      data.timeRemaining - _timePassed > 0
+        ? data.timeRemaining - _timePassed
+        : 0;
+    await stopT.mutateAsync({
+      timerId: data.id,
+      timeRemaining: _timeRemaining,
+    });
+    await createTS.mutateAsync({
+      timerId: data.id,
+      startTime: _startTime,
+      endTime: _endTime,
+      timePassed: _timePassed,
+    });
     await refetch();
     setIsUpdating(false);
   };

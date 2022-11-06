@@ -61,7 +61,7 @@ model VerificationToken {
 }
 
 model Timer {
-  id            String  @id @default(cuid())
+  id            String          @id @default(cuid())
   title         String
   description   String?
   totalTime     Int
@@ -69,7 +69,17 @@ model Timer {
   updatedAt     Int
   isRunning     Boolean
   userEmail     String
-  user          User    @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  user          User            @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  TimerSessions TimerSessions[]
 
   @@unique([userEmail, title])
+}
+
+model TimerSessions {
+  id         String @id @default(cuid())
+  timerId    String
+  timer      Timer  @relation(fields: [timerId], references: [id], onDelete: Cascade)
+  startTime  Int
+  endTime    Int
+  timePassed Int
 }
