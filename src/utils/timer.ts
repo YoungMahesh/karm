@@ -9,6 +9,15 @@ export const secondsToHours = (seconds: number) => {
     seconds - hoursRemaining * 60 * 60 - minutesRemaining * 60;
   return `${hoursRemaining}h:${minutesRemaining}m:${secondsRemaining}s`;
 };
+export const secondsToHours1 = (seconds: number): [number, number, number] => {
+  const hoursRemaining = Math.floor(seconds / 60 / 60);
+  const minutesRemaining = Math.floor(
+    (seconds - hoursRemaining * 60 * 60) / 60
+  );
+  const secondsRemaining =
+    seconds - hoursRemaining * 60 * 60 - minutesRemaining * 60;
+  return [hoursRemaining, minutesRemaining, secondsRemaining];
+};
 
 export const wait = async (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));

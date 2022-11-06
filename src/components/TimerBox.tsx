@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { currTime, secondsToHours, wait } from "../utils/timer";
+import { useMemo, useState } from "react";
+import { currTime, secondsToHours1 } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 
 export default function TimerBox({ timerId }: { timerId: string }) {
@@ -12,16 +12,17 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
+  const [h1, m1, s1] = useMemo(() => {
+    if (remTime <= 0) return [0, 0, 0];
     if (data && data.isRunning) {
-      console.log("executed counting");
-      remTime > 0 && setTimeout(() => setRemTime((r) => r - 1), 1000);
+      setTimeout(() => setRemTime(remTime - 1), 1000);
     }
+    console.log(Math.floor(Date.now() / 1000), remTime);
+    return secondsToHours1(remTime);
   }, [remTime]);
 
-  useEffect(() => {
+  const [h0, m0, s0] = useMemo(() => {
     if (data) {
-      console.log("setting remaining time", data.timeRemaining);
       if (data.isRunning) {
         const timeReduced = currTime() - data.updatedAt;
         if (timeReduced > data.timeRemaining) {
@@ -32,6 +33,10 @@ export default function TimerBox({ timerId }: { timerId: string }) {
       } else {
         setRemTime(data.timeRemaining);
       }
+
+      return secondsToHours1(data.totalTime);
+    } else {
+      return [0, 0, 0];
     }
   }, [data]);
 
@@ -40,7 +45,6 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const startTimer = async () => {
     setIsUpdating(true);
     await startT.mutateAsync({ timerId: data.id });
-    console.log("started timer");
     await refetch();
     setIsUpdating(false);
   };
@@ -48,7 +52,6 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const stopTimer = async () => {
     setIsUpdating(true);
     await stopT.mutateAsync({ timerId: data.id, timeRemaining: remTime });
-    console.log("stopped timer");
     await refetch();
     setIsUpdating(false);
   };
@@ -69,8 +72,22 @@ export default function TimerBox({ timerId }: { timerId: string }) {
           <div className="card-body">
             <h2 className="card-title">{data.title}</h2>
             <p>{data.description}</p>
-            <p>Total Time: {secondsToHours(data.totalTime)}</p>
-            <p>Time Remaining: {secondsToHours(remTime)}</p>
+            <p>
+              Total Time:
+              <span className="countdown font-mono text-2xl">
+                <span style={{ "--value": h0 } as any}></span>:
+                <span style={{ "--value": m0 } as any}></span>:
+                <span style={{ "--value": s0 } as any}></span>
+              </span>
+            </p>
+            <p>
+              Time Remaining:
+              <span className="countdown font-mono text-2xl">
+                <span style={{ "--value": h1 } as any}></span>:
+                <span style={{ "--value": m1 } as any}></span>:
+                <span style={{ "--value": s1 } as any}></span>
+              </span>
+            </p>
 
             <div className="card-actions justify-end">
               {isUpdating ? (
