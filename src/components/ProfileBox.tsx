@@ -66,7 +66,7 @@ export default function ProfileBox() {
         )}
 
         {isDeleting ? (
-          <button className="loading btn-error btn mt-4" />
+          <button className="btn-error loading btn mt-4" />
         ) : (
           <button className="btn-error btn mt-4" onClick={deleteAccount}>
             Delete Account

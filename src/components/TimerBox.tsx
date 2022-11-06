@@ -62,7 +62,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
 
   return (
     <>
-      <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="card w-fit bg-base-100 shadow-xl">
         {isLoading ? (
           <p className="text-center">Loading...</p>
         ) : (
@@ -71,9 +71,10 @@ export default function TimerBox({ timerId }: { timerId: string }) {
             <p>{data.description}</p>
             <p>Total Time: {secondsToHours(data.totalTime)}</p>
             <p>Time Remaining: {secondsToHours(remTime)}</p>
+
             <div className="card-actions justify-end">
               {isUpdating ? (
-                <button className="loading btn-primary btn" />
+                <button className="btn-primary loading btn" />
               ) : (
                 <button
                   onClick={() => (data.isRunning ? stopTimer() : startTimer())}
@@ -83,7 +84,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
                 </button>
               )}
               {isDeleting ? (
-                <button className="loading btn-error btn" />
+                <button className="btn-error loading btn" />
               ) : (
                 <button onClick={deleteTimer} className="btn-error btn">
                   Delete

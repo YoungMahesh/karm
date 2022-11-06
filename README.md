@@ -1,3 +1,3 @@
 ### Todo
-- Add Google Auth
-- Create Homepage
+- Add PWA (progressive web app) support
+- Improve Landing page

@@ -12,10 +12,10 @@ export default function AuthShowcase() {
   if (status === "loading") return <p className="text-center">Loading...</p>;
 
   return (
-    <header className="flex  items-center justify-between p-2">
+    <header className="flex items-center justify-between p-2">
       <Image
         src={logo}
-        width={90}
+        width={100}
         alt="Karm"
         className="cursor-pointer rounded"
         onClick={() => router.push("/")}
@@ -24,17 +24,23 @@ export default function AuthShowcase() {
 
       <div>
         {sessionData && (
-          <button className="btn mr-2" onClick={() => router.push("/profile")}>
+          <button
+            className="btn-primary btn mr-2"
+            onClick={() => router.push("/profile")}
+          >
             {data?.name}
           </button>
         )}
 
-        <button
-          className="btn"
-          onClick={sessionData ? () => signOut() : () => signIn()}
-        >
-          {sessionData ? "Sign out" : "Sign in"}
-        </button>
+        {sessionData ? (
+          <button className="btn-error btn" onClick={() => signOut()}>
+            Sign out
+          </button>
+        ) : (
+          <button className="btn-primary btn" onClick={() => signIn()}>
+            Sign in
+          </button>
+        )}
       </div>
     </header>
   );
