@@ -2,7 +2,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const timerSessionsRouter = router({
-  createTimerSession: protectedProcedure
+  create: protectedProcedure
     .input(
       z.object({
         timerId: z.string(),
@@ -18,6 +18,37 @@ export const timerSessionsRouter = router({
           startTime: req.input.startTime,
           endTime: req.input.endTime,
           timePassed: req.input.timePassed,
+          userEmail: req.ctx.session.user.email,
+        },
+      });
+    }),
+
+  getOne: protectedProcedure
+    .input(
+      z.object({
+        timerSessionId: z.string(),
+      })
+    )
+    .query((req) => {
+      return req.ctx.prisma.timerSessions.findUnique({
+        where: { id: req.input.timerSessionId },
+        include: { timer: { select: { title: true } } },
+      });
+    }),
+
+  getAllIds: protectedProcedure.query((req) => {
+    return req.ctx.prisma.timerSessions.findMany({
+      where: { userEmail: req.ctx.session.user.email },
+      select: { id: true },
+    });
+  }),
+
+  deleteOne: protectedProcedure
+    .input(z.object({ timerSessionId: z.string() }))
+    .mutation((req) => {
+      return req.ctx.prisma.timerSessions.delete({
+        where: {
+          id: req.input.timerSessionId,
         },
       });
     }),
@@ -55,35 +86,6 @@ export const timerSessionsRouter = router({
   //       data: {
   //         isRunning: false,
   //         timeRemaining: req.input.timeRemaining,
-  //       },
-  //     });
-  //   }),
-
-  // getOne: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       timerId: z.string(),
-  //     })
-  //   )
-  //   .query((req) => {
-  //     return req.ctx.prisma.timer.findUnique({
-  //       where: { id: req.input.timerId },
-  //     });
-  //   }),
-
-  // getAllIds: protectedProcedure.query((req) => {
-  //   return req.ctx.prisma.timer.findMany({
-  //     where: { userEmail: req.ctx.session.user.email },
-  //     select: { id: true },
-  //   });
-  // }),
-
-  // deleteTimer: protectedProcedure
-  //   .input(z.object({ timerId: z.string() }))
-  //   .mutation((req) => {
-  //     return req.ctx.prisma.timer.delete({
-  //       where: {
-  //         id: req.input.timerId,
   //       },
   //     });
   //   }),

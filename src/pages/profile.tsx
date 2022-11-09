@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import AuthShowcase from "../components/AuthShowcase";
+import AuthShowcase from "../components/Header";
 import { useSession } from "next-auth/react";
 import ProfileBox from "../components/ProfileBox";
 

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import logo from "../../public/karm.svg";
 
-export default function AuthShowcase() {
+export default function Header() {
   const { data: sessionData, status } = useSession();
   const { data } = trpc.profile.getProfile.useQuery();
   const router = useRouter();
@@ -24,12 +24,20 @@ export default function AuthShowcase() {
 
       <div>
         {sessionData && (
-          <button
-            className="btn-primary btn mr-2"
-            onClick={() => router.push("/profile")}
-          >
-            {data?.name}
-          </button>
+          <>
+            <button
+              className="btn-primary btn mr-2"
+              onClick={() => router.push("/history")}
+            >
+              History
+            </button>
+            <button
+              className="btn-primary btn mr-2"
+              onClick={() => router.push("/profile")}
+            >
+              {data?.name}
+            </button>
+          </>
         )}
 
         {sessionData ? (

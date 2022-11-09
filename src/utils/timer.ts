@@ -21,3 +21,9 @@ export const secondsToHours1 = (seconds: number): [number, number, number] => {
 
 export const wait = async (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+export const secondsToDate = (seconds: number) => {
+  const date = new Date(seconds * 1000);
+  const month = date.toLocaleString("default", { month: "short" });
+  return `${date.getDate()}-${month}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+};

@@ -8,7 +8,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const startT = trpc.timer.startTimer.useMutation();
   const stopT = trpc.timer.stopTimer.useMutation();
   const deleteT = trpc.timer.deleteTimer.useMutation();
-  const createTS = trpc.timerSessions.createTimerSession.useMutation();
+  const createTS = trpc.timerSessions.create.useMutation();
   const [remTime, setRemTime] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
