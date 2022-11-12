@@ -17,7 +17,6 @@ export const timerRouter = router({
           title: req.input.title,
           description: req.input.description,
           totalTime: req.input.totalTime,
-          timeRemaining: req.input.totalTime,
           updatedAt: currTime(),
           isRunning: false,
           userEmail: req.ctx.session.user.email,
@@ -43,11 +42,10 @@ export const timerRouter = router({
       });
     }),
 
-  stopTimer: protectedProcedure
+  stop: protectedProcedure
     .input(
       z.object({
         timerId: z.string(),
-        timeRemaining: z.number(),
       })
     )
     .mutation((req) => {
@@ -57,7 +55,6 @@ export const timerRouter = router({
         },
         data: {
           isRunning: false,
-          timeRemaining: req.input.timeRemaining,
         },
       });
     }),
@@ -71,6 +68,19 @@ export const timerRouter = router({
     .query((req) => {
       return req.ctx.prisma.timer.findUnique({
         where: { id: req.input.timerId },
+      });
+    }),
+
+  getTotalTime: protectedProcedure
+    .input(
+      z.object({
+        timerId: z.string(),
+      })
+    )
+    .query((req) => {
+      return req.ctx.prisma.timerSessions.aggregate({
+        where: { timerId: req.input.timerId },
+        _sum: { timePassed: true },
       });
     }),
 

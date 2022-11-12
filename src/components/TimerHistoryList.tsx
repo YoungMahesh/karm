@@ -25,6 +25,7 @@ export default function TimerHistoryList() {
                   <th>EndTime</th>
                   <th>TimePassed</th>
                   <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>

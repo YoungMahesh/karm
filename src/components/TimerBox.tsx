@@ -6,41 +6,40 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const { data, isLoading, refetch } = trpc.timer.getOne.useQuery({ timerId });
   const getAll = trpc.timer.getAllIds.useQuery();
   const startT = trpc.timer.startTimer.useMutation();
-  const stopT = trpc.timer.stopTimer.useMutation();
+  const stopT = trpc.timer.stop.useMutation();
   const deleteT = trpc.timer.deleteTimer.useMutation();
   const createTS = trpc.timerSessions.create.useMutation();
+  const timeRem = trpc.timer.getTotalTime.useQuery({ timerId });
   const [remTime, setRemTime] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [h1, m1, s1] = useMemo(() => {
     if (remTime <= 0) return [0, 0, 0];
-    if (data) {
-      if (data.isRunning) setTimeout(() => setRemTime(remTime - 1), 1000);
-      else setRemTime(data.timeRemaining);
-    }
-    console.log(Math.floor(Date.now() / 1000), remTime);
+    if (data && data.isRunning) setTimeout(() => setRemTime(remTime - 1), 1000);
+    // console.log(Math.floor(Date.now() / 1000), remTime);
     return secondsToHours1(remTime);
   }, [remTime]);
 
   const [h0, m0, s0] = useMemo(() => {
-    if (data) {
+    if (data && timeRem.data) {
+      const _timeRemaining = timeRem.data._sum.timePassed
+        ? data.totalTime - timeRem.data._sum.timePassed
+        : data.totalTime;
+
       if (data.isRunning) {
         const timeReduced = currTime() - data.updatedAt;
-        if (timeReduced > data.timeRemaining) {
-          setRemTime(0);
-        } else {
-          setRemTime(data.timeRemaining - timeReduced);
-        }
+        if (timeReduced > _timeRemaining) setRemTime(0);
+        else setRemTime(_timeRemaining - timeReduced);
       } else {
-        setRemTime(data.timeRemaining);
+        setRemTime(_timeRemaining);
       }
 
       return secondsToHours1(data.totalTime);
     } else {
       return [0, 0, 0];
     }
-  }, [data]);
+  }, [data, timeRem.data]);
 
   if (!data) return <p>no data</p>;
 
@@ -56,13 +55,9 @@ export default function TimerBox({ timerId }: { timerId: string }) {
     const _startTime = data.updatedAt;
     const _endTime = currTime();
     const _timePassed = _endTime - _startTime;
-    const _timeRemaining =
-      data.timeRemaining - _timePassed > 0
-        ? data.timeRemaining - _timePassed
-        : 0;
+
     await stopT.mutateAsync({
       timerId: data.id,
-      timeRemaining: _timeRemaining,
     });
     await createTS.mutateAsync({
       timerId: data.id,
@@ -70,6 +65,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
       endTime: _endTime,
       timePassed: _timePassed,
     });
+    await timeRem.refetch();
     await refetch();
     setIsUpdating(false);
   };
