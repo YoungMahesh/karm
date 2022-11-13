@@ -40,6 +40,7 @@ export const timerRouter = router({
     .input(
       z.object({
         timerId: z.string(),
+        updatedAt: z.number(),
       })
     )
     .mutation((req) => {
@@ -49,7 +50,7 @@ export const timerRouter = router({
         },
         data: {
           isRunning: true,
-          updatedAt: currTime(),
+          updatedAt: req.input.updatedAt,
         },
       });
     }),
@@ -88,6 +89,7 @@ export const timerRouter = router({
     return req.ctx.prisma.timer.findMany({
       where: { userEmail: req.ctx.session.user.email },
       select: { id: true },
+      orderBy: { title: "asc" },
     });
   }),
 

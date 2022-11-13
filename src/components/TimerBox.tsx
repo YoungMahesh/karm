@@ -1,7 +1,18 @@
-import { useMemo, useState } from "react";
-import { currTime, secondsToHours1 } from "../utils/timer";
+import { useEffect, useMemo, useState } from "react";
+import { currTime, secondsToHours1, wait } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 
+const currRemaining = (
+  totalTime: number,
+  lastUpdated: number,
+  timePassed: number,
+  isRunning: boolean
+) => {
+  const _timeRemaining = timePassed ? totalTime - timePassed : totalTime;
+  const timeReduced = currTime() - lastUpdated;
+  if (timeReduced > _timeRemaining) return 0;
+  return isRunning ? _timeRemaining - timeReduced : _timeRemaining;
+};
 export default function TimerBox({ timerId }: { timerId: string }) {
   const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
   const getAll = trpc.timer.getAllIds.useQuery();
@@ -10,42 +21,68 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const deleteT = trpc.timer.delete.useMutation();
   const createTS = trpc.timerSessions.create.useMutation();
   const timeRem = trpc.timer.getTotalTime.useQuery({ timerId });
-  const [remTime, setRemTime] = useState(0);
+
+  const [isRefetching, setIsRefetching] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const [h1, m1, s1] = useMemo(() => {
-    if (remTime <= 0) return [0, 0, 0];
-    if (data && data.isRunning) setTimeout(() => setRemTime(remTime - 1), 1000);
-    // console.log(Math.floor(Date.now() / 1000), remTime);
-    return secondsToHours1(remTime);
-  }, [remTime]);
+  const [tTime, setTTime] = useState([0, 0, 0]);
+  const [currRem, setCurrRem] = useState<[number, number, number]>([0, 0, 0]);
 
-  const [h0, m0, s0] = useMemo(() => {
+  const updateRemTime = () => {
+    console.log("update rem time", data, timeRem.data);
     if (data && timeRem.data) {
-      const _timeRemaining = timeRem.data._sum.timePassed
-        ? data.totalTime - timeRem.data._sum.timePassed
-        : data.totalTime;
+      setCurrRem(
+        secondsToHours1(
+          currRemaining(
+            data.totalTime!,
+            data.updatedAt!,
+            timeRem.data._sum.timePassed!,
+            data.isRunning!
+          )
+        )
+      );
+    }
+  };
 
-      if (data.isRunning) {
-        const timeReduced = currTime() - data.updatedAt;
-        if (timeReduced > _timeRemaining) setRemTime(0);
-        else setRemTime(_timeRemaining - timeReduced);
-      } else {
-        setRemTime(_timeRemaining);
-      }
+  // useEffect(() => {
+  //   if (
+  //     data?.isRunning &&
+  //     (currRem[2] > 0 || currRem[1] > 0 || currRem[0] > 0)
+  //   ) {
+  //     setTimeout(() => {
 
-      return secondsToHours1(data.totalTime);
+  //       updateRemTime();
+  //     }, 1000);
+  //   }
+  // }, [currRem]);
+
+  useEffect(() => {
+    if (data && timeRem.data) {
+      updateRemTime();
+    }
+  }, [data, timeRem.data]);
+
+  useEffect(() => {
+    if (data && timeRem.data) {
+      return setTTime(secondsToHours1(data.totalTime));
     } else {
-      return [0, 0, 0];
+      return setTTime([0, 0, 0]);
     }
   }, [data, timeRem.data]);
 
   if (!data) return <p>no data</p>;
 
+  const refetchRemTime = async () => {
+    setIsRefetching(true);
+    await timeRem.refetch();
+    updateRemTime();
+    setIsRefetching(false);
+  };
+
   const startTimer = async () => {
     setIsUpdating(true);
-    await startT.mutateAsync({ timerId: data.id });
+    await startT.mutateAsync({ timerId: data.id, updatedAt: currTime() });
     await refetch();
     setIsUpdating(false);
   };
@@ -54,20 +91,21 @@ export default function TimerBox({ timerId }: { timerId: string }) {
     setIsUpdating(true);
     const _startTime = data.updatedAt;
     const _endTime = currTime();
-    const _timePassed = _endTime - _startTime;
 
-    await stopT.mutateAsync({
-      timerId: data.id,
-    });
-    await createTS.mutateAsync({
-      timerId: data.id,
-      startTime: _startTime,
-      endTime: _endTime,
-      timePassed: _timePassed,
-    });
-    await timeRem.refetch();
+    await Promise.all([
+      createTS.mutateAsync({
+        timerId: data.id,
+        startTime: _startTime,
+        endTime: _endTime,
+        timePassed: _endTime - _startTime,
+      }),
+      stopT.mutateAsync({
+        timerId: data.id,
+      }),
+    ]);
     await refetch();
     setIsUpdating(false);
+    refetchRemTime();
   };
 
   const deleteTimer = async () => {
@@ -89,21 +127,30 @@ export default function TimerBox({ timerId }: { timerId: string }) {
             <p>
               Total Time:
               <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": h0 } as any}></span>:
-                <span style={{ "--value": m0 } as any}></span>:
-                <span style={{ "--value": s0 } as any}></span>
+                <span style={{ "--value": tTime[0] } as any}></span>:
+                <span style={{ "--value": tTime[1] } as any}></span>:
+                <span style={{ "--value": tTime[2] } as any}></span>
               </span>
             </p>
             <p>
               Time Remaining:
               <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": h1 } as any}></span>:
-                <span style={{ "--value": m1 } as any}></span>:
-                <span style={{ "--value": s1 } as any}></span>
+                <span style={{ "--value": currRem[0] } as any}></span>:
+                <span style={{ "--value": currRem[1] } as any}></span>:
+                <span style={{ "--value": currRem[2] } as any}></span>
               </span>
             </p>
 
             <div className="card-actions justify-end">
+              {isRefetching ? (
+                <button className="loading btn-primary btn">
+                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                </button>
+              ) : (
+                <button onClick={refetchRemTime} className="btn-primary btn">
+                  Refetch
+                </button>
+              )}
               {isUpdating ? (
                 <button className="loading btn-primary btn" />
               ) : (
