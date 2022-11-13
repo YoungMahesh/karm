@@ -36,10 +36,27 @@ export const timerSessionsRouter = router({
       });
     }),
 
-  getAllIds: protectedProcedure.query((req) => {
-    return req.ctx.prisma.timerSessions.findMany({
+  getAllIds: protectedProcedure
+    .input(
+      z.object({
+        page: z.number(),
+        limit: z.number(),
+      })
+    )
+
+    .query((req) => {
+      return req.ctx.prisma.timerSessions.findMany({
+        where: { userEmail: req.ctx.session.user.email },
+        select: { id: true },
+        orderBy: { endTime: "desc" },
+        skip: (req.input.page - 1) * req.input.limit,
+        take: req.input.limit,
+      });
+    }),
+
+  getAllIdsCount: protectedProcedure.query((req) => {
+    return req.ctx.prisma.timerSessions.count({
       where: { userEmail: req.ctx.session.user.email },
-      select: { id: true },
     });
   }),
 

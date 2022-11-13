@@ -7,7 +7,7 @@ import {
   BookmarkIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { secondsToDate, secondsToHours } from "../utils/timer";
+import { itemsPerPage, secondsToDate, secondsToHours } from "../utils/timer";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -16,10 +16,12 @@ import TextField from "@mui/material/TextField";
 
 export default function TimerBox({
   timerSessionId,
-  index,
+  id,
+  page,
 }: {
   timerSessionId: string;
-  index: number;
+  id: number;
+  page: number;
 }) {
   const [startTE, setStartTE] = useState<Dayjs | null>(dayjs(new Date()));
   const [endTE, setEndTE] = useState<Dayjs | null>(dayjs(new Date()));
@@ -28,7 +30,10 @@ export default function TimerBox({
   const { data, isLoading, refetch } = trpc.timerSessions.get.useQuery({
     timerSessionId,
   });
-  const getAll = trpc.timerSessions.getAllIds.useQuery();
+  const getAll = trpc.timerSessions.getAllIds.useQuery({
+    page,
+    limit: itemsPerPage,
+  });
   const updateT = trpc.timerSessions.update.useMutation();
   const deleteT = trpc.timerSessions.delete.useMutation();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -78,7 +83,7 @@ export default function TimerBox({
 
   return (
     <tr>
-      <th>{index}</th>
+      <th>{id}</th>
       <td>{data.timer.title} </td>
       {!isEditing ? (
         <>

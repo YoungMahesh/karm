@@ -85,13 +85,22 @@ export const timerRouter = router({
       });
     }),
 
-  getAllIds: protectedProcedure.query((req) => {
-    return req.ctx.prisma.timer.findMany({
-      where: { userEmail: req.ctx.session.user.email },
-      select: { id: true },
-      orderBy: { title: "asc" },
-    });
-  }),
+  getAllIds: protectedProcedure
+    .input(
+      z.object({
+        page: z.number(),
+        limit: z.number(),
+      })
+    )
+    .query((req) => {
+      return req.ctx.prisma.timer.findMany({
+        where: { userEmail: req.ctx.session.user.email },
+        select: { id: true },
+        orderBy: { title: "asc" },
+        skip: (req.input.page - 1) * req.input.limit,
+        take: req.input.limit,
+      });
+    }),
 
   delete: protectedProcedure
     .input(z.object({ timerId: z.string() }))

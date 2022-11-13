@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { currTime, secondsToHours1, wait } from "../utils/timer";
+import { useEffect, useState } from "react";
+import { currTime, itemsPerPage, secondsToHours1, wait } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 
 const currRemaining = (
@@ -15,7 +15,7 @@ const currRemaining = (
 };
 export default function TimerBox({ timerId }: { timerId: string }) {
   const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
-  const getAll = trpc.timer.getAllIds.useQuery();
+  const getAll = trpc.timer.getAllIds.useQuery({ page: 1, limit: 10 });
   const startT = trpc.timer.start.useMutation();
   const stopT = trpc.timer.stop.useMutation();
   const deleteT = trpc.timer.delete.useMutation();
@@ -30,7 +30,6 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const [currRem, setCurrRem] = useState<[number, number, number]>([0, 0, 0]);
 
   const updateRemTime = () => {
-    console.log("update rem time", data, timeRem.data);
     if (data && timeRem.data) {
       setCurrRem(
         secondsToHours1(

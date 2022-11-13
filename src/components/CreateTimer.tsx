@@ -4,7 +4,7 @@ import { trpc } from "../utils/trpc";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export default function CreateTimer() {
-  const { refetch } = trpc.timer.getAllIds.useQuery();
+  const { refetch } = trpc.timer.getAllIds.useQuery({ page: 1, limit: 10 });
   const createT = trpc.timer.create.useMutation();
 
   const [title, setTitle] = useState("");

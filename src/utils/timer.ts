@@ -27,3 +27,5 @@ export const secondsToDate = (seconds: number) => {
   const month = date.toLocaleString("default", { month: "short" });
   return `${date.getDate()}-${month}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
 };
+
+export const itemsPerPage = 3;

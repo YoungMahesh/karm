@@ -37,6 +37,9 @@ export default function Header() {
                 className="dropdown-content menu rounded-box mt-4 w-52 bg-base-100 p-2 shadow"
               >
                 <li>
+                  <Link href="/">Home</Link>
+                </li>
+                <li>
                   <Link href="/history">History</Link>
                 </li>
                 <li>
