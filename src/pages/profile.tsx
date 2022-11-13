@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Profile | Karm</title>
+        <title>Profile | Timers</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>

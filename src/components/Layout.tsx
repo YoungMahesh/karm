@@ -11,7 +11,7 @@ const Layout = ({ children, title }: { children: any; title: string }) => {
     <>
       <Head>
         <title>{title}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.svg" />
       </Head>
 
       <div className="drawer">

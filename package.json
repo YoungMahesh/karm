@@ -1,6 +1,6 @@
 {
-  "name": "karm",
-  "version": "0.5.0",
+  "name": "timers",
+  "version": "0.8.0",
   "private": true,
   "scripts": {
     "build": "next build",

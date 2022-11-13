@@ -2,7 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
-import logo from "../../public/karm.svg";
+import logo from "../../public/logo.svg";
 
 export default function Header() {
   const { data: sessionData, status } = useSession();
@@ -15,8 +15,8 @@ export default function Header() {
     <header className="flex items-center justify-between p-2">
       <Image
         src={logo}
-        width={100}
-        alt="Karm"
+        width={70}
+        alt="Timers"
         className="cursor-pointer rounded"
         onClick={() => router.push("/")}
         priority

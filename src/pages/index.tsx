@@ -5,7 +5,7 @@ import PlusButton from "../components/PlusButton";
 
 const Home: NextPage = () => {
   return (
-    <Layout title="Timer">
+    <Layout title="Timers">
       <TimersList />
       <PlusButton />
     </Layout>

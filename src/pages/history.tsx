@@ -3,7 +3,7 @@ import TimerHistoryList from "../components/TimerHistoryList";
 
 export default function History() {
   return (
-    <Layout title="history">
+    <Layout title="History | Timers">
       <TimerHistoryList />
     </Layout>
   );
