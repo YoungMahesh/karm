@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Header from "../components/Header";
-import TimersList from "../components/TimersList";
 import CreateTimer from "../components/CreateTimer";
 import { useSession } from "next-auth/react";
 

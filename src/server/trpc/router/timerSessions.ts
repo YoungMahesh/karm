@@ -43,16 +43,6 @@ export const timerSessionsRouter = router({
     });
   }),
 
-  delete: protectedProcedure
-    .input(z.object({ timerSessionId: z.string() }))
-    .mutation((req) => {
-      return req.ctx.prisma.timerSessions.delete({
-        where: {
-          id: req.input.timerSessionId,
-        },
-      });
-    }),
-
   update: protectedProcedure
     .input(
       z.object({
@@ -71,6 +61,16 @@ export const timerSessionsRouter = router({
           startTime: req.input.startTime,
           endTime: req.input.endTime,
           timePassed: req.input.timePassed,
+        },
+      });
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ timerSessionId: z.string() }))
+    .mutation((req) => {
+      return req.ctx.prisma.timerSessions.delete({
+        where: {
+          id: req.input.timerSessionId,
         },
       });
     }),

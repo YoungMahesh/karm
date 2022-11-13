@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 
 export default function ProfileBox() {
-  const { data, isLoading, refetch } = trpc.profile.getProfile.useQuery();
-  const updateN = trpc.profile.updateName.useMutation();
-  const deleteA = trpc.profile.deleteAccount.useMutation();
+  const { data, isLoading, refetch } = trpc.profile.get.useQuery();
+  const updateN = trpc.profile.update.useMutation();
+  const deleteA = trpc.profile.delete.useMutation();
   const [name1, setName1] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const profileRouter = router({
-  getProfile: protectedProcedure.query(async (req) => {
+  get: protectedProcedure.query(async (req) => {
     const user = await req.ctx.prisma.user.findUnique({
       where: {
         email: req.ctx.session.user.email,
@@ -13,7 +13,7 @@ export const profileRouter = router({
     }
     return user;
   }),
-  updateName: protectedProcedure
+  update: protectedProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async (req) => {
       return req.ctx.prisma.user.update({
@@ -25,7 +25,7 @@ export const profileRouter = router({
         },
       });
     }),
-  deleteAccount: protectedProcedure.mutation(async (req) => {
+  delete: protectedProcedure.mutation(async (req) => {
     return req.ctx.prisma.user.delete({
       where: {
         email: req.ctx.session.user.email,

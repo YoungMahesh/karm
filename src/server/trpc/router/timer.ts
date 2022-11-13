@@ -3,7 +3,7 @@ import { currTime } from "../../../utils/timer";
 import { protectedProcedure, router } from "../trpc";
 
 export const timerRouter = router({
-  createTimer: protectedProcedure
+  create: protectedProcedure
     .input(
       z.object({
         title: z.string(),
@@ -24,7 +24,19 @@ export const timerRouter = router({
       });
     }),
 
-  startTimer: protectedProcedure
+  get: protectedProcedure
+    .input(
+      z.object({
+        timerId: z.string(),
+      })
+    )
+    .query((req) => {
+      return req.ctx.prisma.timer.findUnique({
+        where: { id: req.input.timerId },
+      });
+    }),
+
+  start: protectedProcedure
     .input(
       z.object({
         timerId: z.string(),
@@ -59,18 +71,6 @@ export const timerRouter = router({
       });
     }),
 
-  getOne: protectedProcedure
-    .input(
-      z.object({
-        timerId: z.string(),
-      })
-    )
-    .query((req) => {
-      return req.ctx.prisma.timer.findUnique({
-        where: { id: req.input.timerId },
-      });
-    }),
-
   getTotalTime: protectedProcedure
     .input(
       z.object({
@@ -91,7 +91,7 @@ export const timerRouter = router({
     });
   }),
 
-  deleteTimer: protectedProcedure
+  delete: protectedProcedure
     .input(z.object({ timerId: z.string() }))
     .mutation((req) => {
       return req.ctx.prisma.timer.delete({

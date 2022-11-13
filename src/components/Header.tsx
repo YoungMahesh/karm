@@ -6,7 +6,7 @@ import logo from "../../public/logo.svg";
 
 export default function Header() {
   const { data: sessionData, status } = useSession();
-  const { data } = trpc.profile.getProfile.useQuery();
+  const { data } = trpc.profile.get.useQuery();
   const router = useRouter();
 
   if (status === "loading") return <p className="text-center">Loading...</p>;

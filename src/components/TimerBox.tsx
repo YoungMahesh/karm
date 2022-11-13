@@ -3,11 +3,11 @@ import { currTime, secondsToHours1 } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 
 export default function TimerBox({ timerId }: { timerId: string }) {
-  const { data, isLoading, refetch } = trpc.timer.getOne.useQuery({ timerId });
+  const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
   const getAll = trpc.timer.getAllIds.useQuery();
-  const startT = trpc.timer.startTimer.useMutation();
+  const startT = trpc.timer.start.useMutation();
   const stopT = trpc.timer.stop.useMutation();
-  const deleteT = trpc.timer.deleteTimer.useMutation();
+  const deleteT = trpc.timer.delete.useMutation();
   const createTS = trpc.timerSessions.create.useMutation();
   const timeRem = trpc.timer.getTotalTime.useQuery({ timerId });
   const [remTime, setRemTime] = useState(0);
