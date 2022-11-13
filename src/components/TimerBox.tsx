@@ -105,7 +105,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
 
             <div className="card-actions justify-end">
               {isUpdating ? (
-                <button className="btn-primary loading btn" />
+                <button className="loading btn-primary btn" />
               ) : (
                 <button
                   onClick={() => (data.isRunning ? stopTimer() : startTimer())}
@@ -115,7 +115,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
                 </button>
               )}
               {isDeleting ? (
-                <button className="btn-error loading btn" />
+                <button className="loading btn-error btn" />
               ) : (
                 <button onClick={deleteTimer} className="btn-error btn">
                   Delete

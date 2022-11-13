@@ -19,7 +19,6 @@ export default function ProfileBox() {
   if (!data) return <p className="text-align">Failed to fetch data</p>;
 
   const updateName = async () => {
-    console.log("updating name");
     setIsUpdating(true);
     await updateN.mutateAsync({ name: name1 });
     refetch();
@@ -66,7 +65,7 @@ export default function ProfileBox() {
         )}
 
         {isDeleting ? (
-          <button className="btn-error loading btn mt-4" />
+          <button className="loading btn-error btn mt-4" />
         ) : (
           <button className="btn-error btn mt-4" onClick={deleteAccount}>
             Delete Account

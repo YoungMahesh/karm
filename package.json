@@ -13,6 +13,7 @@
   },
   "pre-commit": [
     "format",
+    "build",
     "git1"
   ],
   "dependencies": {

@@ -6,11 +6,9 @@ export default function TimerHistoryList() {
   const { data, isLoading } = trpc.timerSessions.getAllIds.useQuery();
   const session = useSession();
 
-  console.log("timerhistorybox");
   if (isLoading) return <p>Loading...</p>;
   if (!data) return <p>no data</p>;
 
-  console.log("timerhistorylist", data);
   return (
     <>
       {session.data?.user ? (

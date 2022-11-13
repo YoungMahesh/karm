@@ -51,8 +51,6 @@ export default function TimerBox({
     }
   }, [startTE, endTE]);
 
-  console.log("timerhistorybox", data, timerSessionId);
-
   if (isLoading) return <p className="text-center">Loading...</p>;
   if (!data) return <p>no data</p>;
 
@@ -66,7 +64,6 @@ export default function TimerBox({
   const editTimerSession = async () => {
     if (startTE && endTE) {
       setIsSaving(true);
-      console.log(data.id, startTE.unix(), endTE.unix(), timePassedE);
       await updateT.mutateAsync({
         timerSessionId: data.id,
         startTime: startTE.unix(),
@@ -96,7 +93,7 @@ export default function TimerBox({
           </td>
           <td>
             {isDeleting ? (
-              <button className="btn-error loading btn" />
+              <button className="loading btn-error btn" />
             ) : (
               <TrashIcon
                 className="h-6 w-6 cursor-pointer text-red-600"
