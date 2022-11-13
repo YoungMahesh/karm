@@ -36,7 +36,7 @@ export default function ProfileBox() {
 
   return (
     <div className="mt-16 flex w-screen justify-center">
-      <div className="form-control">
+      <div>
         <label className="input-group">
           <span>Name</span>
           <input
@@ -59,8 +59,8 @@ export default function ProfileBox() {
         {isUpdating ? (
           <button className="loading btn" />
         ) : (
-          <button onClick={updateName} className="btn">
-            Update Profile
+          <button onClick={updateName} className="btn-primary btn">
+            Update
           </button>
         )}
 

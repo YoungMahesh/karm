@@ -13,7 +13,7 @@ const Layout = ({ children, title }: { children: any; title: string }) => {
         <link rel="icon" href="/logo.svg" />
       </Head>
 
-      <div className="drawer">
+      <main data-theme="cupcake" className="drawer">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
 
         <div className="drawer-content">
@@ -22,7 +22,7 @@ const Layout = ({ children, title }: { children: any; title: string }) => {
         </div>
 
         <CreateTimer />
-      </div>
+      </main>
     </>
   );
 };

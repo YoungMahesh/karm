@@ -107,7 +107,6 @@ export default function TimerBox({
           <td>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileDateTimePicker
-                // label="For mobile"
                 value={startTE}
                 onChange={(newValue) => {
                   setStartTE(newValue);
@@ -119,7 +118,6 @@ export default function TimerBox({
           <td>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileDateTimePicker
-                // label="For mobile"
                 value={endTE}
                 onChange={(newValue) => {
                   setEndTE(newValue);

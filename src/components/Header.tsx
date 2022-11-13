@@ -49,7 +49,7 @@ export default function Header() {
               </ul>
             </div>
           ) : (
-            <button className="btn " onClick={() => signIn()}>
+            <button className="btn-primary btn" onClick={() => signIn()}>
               Sign In
             </button>
           )}

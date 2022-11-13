@@ -1,3 +1,4 @@
+- Live-link: https://timers0.vercel.app/
+
 ### Todo
-- Add PWA (progressive web app) support
 - Improve Landing page
