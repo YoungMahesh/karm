@@ -45,7 +45,15 @@ export default function Header() {
                 <li>
                   <Link href="/profile">{data?.name}</Link>
                 </li>
-
+                <li>
+                  <a
+                    href="https://github.com/YoungMahesh/timers"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Source Code
+                  </a>
+                </li>
                 <li onClick={() => signOut()}>
                   <a>Sign out</a>
                 </li>

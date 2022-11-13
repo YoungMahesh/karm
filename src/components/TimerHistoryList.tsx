@@ -3,6 +3,8 @@ import TimerHistoryBox from "./TimerHistoryBox";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { itemsPerPage } from "../utils/timer";
+import Notify from "./Nofity";
+import Loading from "./Loading";
 
 export default function TimerHistoryList() {
   const [page, setPage] = useState(0);
@@ -19,7 +21,12 @@ export default function TimerHistoryList() {
     }
   }, [data]);
 
-  if (!data) return <p>no data</p>;
+  if (isLoading) return <Loading />;
+
+  if (!data)
+    return (
+      <Notify msg="You don't have any history currently. Start and Stop timer to view history here." />
+    );
 
   return (
     <>
@@ -29,15 +36,7 @@ export default function TimerHistoryList() {
             <Table1>
               <TimerHistoryList1 page={page} limit={itemsPerPage} />
             </Table1>
-          ) : (
-            <Table1>
-              {Array.from({ length: itemsPerPage }).map((_, idx) => (
-                <tr key={idx}>
-                  <td>{isLoading ? "Loading..." : "No Data"}</td>
-                </tr>
-              ))}
-            </Table1>
-          )}
+          ) : null}
 
           <>
             {totalPages > 1 ? (
@@ -66,7 +65,7 @@ function TimerHistoryList1({ page, limit }: { page: number; limit: number }) {
     limit,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loading />;
   if (!data) return <p>no data</p>;
 
   return (
