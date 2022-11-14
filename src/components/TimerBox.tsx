@@ -9,9 +9,12 @@ const currRemaining = (
   isRunning: boolean
 ) => {
   const _timeRemaining = timePassed ? totalTime - timePassed : totalTime;
-  const timeReduced = currTime() - lastUpdated;
-  if (timeReduced > _timeRemaining) return 0;
-  return isRunning ? _timeRemaining - timeReduced : _timeRemaining;
+  if (isRunning) {
+    const timeReduced = currTime() - lastUpdated;
+    if (timeReduced > _timeRemaining) return 0;
+    return _timeRemaining - timeReduced;
+  }
+  return _timeRemaining;
 };
 export default function TimerBox({ timerId }: { timerId: string }) {
   const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
@@ -56,11 +59,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   //   }
   // }, [currRem]);
 
-  useEffect(() => {
-    if (data && timeRem.data) {
-      updateRemTime();
-    }
-  }, [data, timeRem.data]);
+  useEffect(() => updateRemTime(), [data, timeRem.data]);
 
   useEffect(() => {
     if (data && timeRem.data) {

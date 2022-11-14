@@ -18,9 +18,9 @@ export default function Header() {
       <div className="flex-1 px-2 lg:flex-none">
         <Image
           src={logo}
-          width={80}
+          width={50}
           alt="Timers"
-          className="cursor-pointer rounded"
+          className="cursor-pointer"
           onClick={() => router.push("/")}
           priority
         />
