@@ -1,6 +1,6 @@
 import { trpc } from "../utils/trpc";
 import TimerBox from "./TimerBox";
-
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import Loading from "./Loading";
 import TimerBoxEmpty from "./TimerBoxEmpty";
 import Notify from "./Nofity";
@@ -27,11 +27,18 @@ export default function TimersList() {
           <TimerBoxEmpty />
         )}
       </div>
+
       <div className="mt-4">
-        <Notify
-          msg={`Note: Currently Timer seconds does not auto update, you need to
-              click on "Refetch" to see current remaining time`}
-        />
+        <Notify>
+          <p className="flex flex-wrap">
+            <span>
+              Note: Currently Timer seconds does not auto update, you need to
+              click on Refetch-Icon
+            </span>
+            &nbsp; (&quot;{<ArrowPathIcon className="h-6 w-6" />}&quot;) &nbsp;
+            <span> to see current remaining time</span>
+          </p>
+        </Notify>
       </div>
     </div>
   );

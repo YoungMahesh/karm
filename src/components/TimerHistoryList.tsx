@@ -25,7 +25,10 @@ export default function TimerHistoryList() {
 
   if (!data)
     return (
-      <Notify msg="You don't have any history currently. Start and Stop timer to view history here." />
+      <Notify>
+        You don&apos;t have any history currently. Start and Stop timer to view
+        history here
+      </Notify>
     );
 
   return (

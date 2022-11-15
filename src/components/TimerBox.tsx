@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { currTime, itemsPerPage, secondsToHours1, wait } from "../utils/timer";
 import { trpc } from "../utils/trpc";
+import {
+  PencilIcon,
+  TrashIcon,
+  PlayIcon,
+  StopIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/solid";
 
 const currRemaining = (
   totalTime: number,
@@ -141,29 +148,50 @@ export default function TimerBox({ timerId }: { timerId: string }) {
 
             <div className="card-actions justify-end">
               {isRefetching ? (
-                <button className="loading btn-primary btn">
-                  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                </button>
+                <button className="loading btn-outline btn-success btn"></button>
               ) : (
-                <button onClick={refetchRemTime} className="btn-primary btn">
-                  Refetch
+                <button
+                  onClick={refetchRemTime}
+                  className="btn-outline btn-success btn"
+                >
+                  <ArrowPathIcon className="h-6 w-6" />
                 </button>
               )}
               {isUpdating ? (
-                <button className="loading btn-primary btn" />
+                <>
+                  {data.isRunning ? (
+                    <button className="loading btn-outline btn-error btn"></button>
+                  ) : (
+                    <button className="loading btn-outline btn-success btn"></button>
+                  )}
+                </>
               ) : (
-                <button
-                  onClick={() => (data.isRunning ? stopTimer() : startTimer())}
-                  className="btn-primary btn"
-                >
-                  {data.isRunning ? "Stop" : "Start"}
-                </button>
+                <>
+                  {data.isRunning ? (
+                    <button
+                      onClick={stopTimer}
+                      className="btn-outline btn-error btn"
+                    >
+                      <StopIcon className="h-6 w-6" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={startTimer}
+                      className="btn-outline btn-success btn"
+                    >
+                      <PlayIcon className="h-6 w-6" />
+                    </button>
+                  )}
+                </>
               )}
               {isDeleting ? (
-                <button className="loading btn-error btn" />
+                <button className="loading btn-outline btn-error btn" />
               ) : (
-                <button onClick={deleteTimer} className="btn-error btn">
-                  Delete
+                <button
+                  onClick={deleteTimer}
+                  className="btn-outline btn-error btn"
+                >
+                  <TrashIcon className="h-6 w-6" />
                 </button>
               )}
             </div>

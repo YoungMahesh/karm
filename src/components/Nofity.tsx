@@ -1,4 +1,4 @@
-export default function Notify({ msg }: { msg: string }) {
+export default function Notify({ children }: { children: any }) {
   return (
     <div className="alert shadow-lg">
       <div>
@@ -15,7 +15,7 @@ export default function Notify({ msg }: { msg: string }) {
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           ></path>
         </svg>
-        <span>{msg}</span>
+        <span>{children}</span>
       </div>
     </div>
   );

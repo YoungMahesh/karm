@@ -15,7 +15,7 @@ const Home: NextPage = () => {
           <PlusButton />
         </>
       ) : (
-        <Notify msg="Sign In to Manage your timers" />
+        <Notify>Sign In to Manage your timers</Notify>
       )}
     </Layout>
   );
