@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
-
 import {
   TrashIcon,
   PencilIcon,
@@ -8,12 +7,10 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { itemsPerPage, secondsToDate, secondsToHours } from "../utils/timer";
-import dayjs, { Dayjs } from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
-import TextField from "@mui/material/TextField";
 import Loading from "./Loading";
+
+// @ts-ignore
+import DateTimePicker from "react-datetime-picker/dist/entry.nostyle";
 
 export default function TimerBox({
   timerSessionId,
@@ -24,8 +21,8 @@ export default function TimerBox({
   id: number;
   page: number;
 }) {
-  const [startTE, setStartTE] = useState<Dayjs | null>(dayjs(new Date()));
-  const [endTE, setEndTE] = useState<Dayjs | null>(dayjs(new Date()));
+  const [startTE, setStartTE] = useState<Date>(new Date());
+  const [endTE, setEndTE] = useState<Date>(new Date());
   const [timePassedE, setTimePassedE] = useState(0);
 
   const { data, isLoading, refetch } = trpc.timerSessions.get.useQuery({
@@ -43,15 +40,17 @@ export default function TimerBox({
 
   useEffect(() => {
     if (isEditing && data) {
-      setStartTE(dayjs(data.startTime * 1000));
-      setEndTE(dayjs(data.endTime * 1000));
+      setStartTE(new Date(data.startTime * 1000));
+      setEndTE(new Date(data.endTime * 1000));
       setTimePassedE(data.timePassed);
     }
   }, [isEditing]);
 
   useEffect(() => {
     if (startTE && endTE) {
-      const _currTimeP = endTE.unix() - startTE.unix();
+      const _currTimeP =
+        Math.floor(endTE.getTime() / 1000) -
+        Math.floor(startTE.getTime() / 1000);
       if (_currTimeP > 0) setTimePassedE(_currTimeP);
       else setTimePassedE(0);
     }
@@ -72,8 +71,8 @@ export default function TimerBox({
       setIsSaving(true);
       await updateT.mutateAsync({
         timerSessionId: data.id,
-        startTime: startTE.unix(),
-        endTime: endTE.unix(),
+        startTime: Math.floor(startTE.getTime() / 1000),
+        endTime: Math.floor(endTE.getTime() / 1000),
         timePassed: timePassedE,
       });
       await refetch();
@@ -111,26 +110,13 @@ export default function TimerBox({
       ) : (
         <>
           <td>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <MobileDateTimePicker
-                value={startTE}
-                onChange={(newValue) => {
-                  setStartTE(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+            <DateTimePicker
+              onChange={(e: Date) => setStartTE(e)}
+              value={startTE}
+            />
           </td>
           <td>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <MobileDateTimePicker
-                value={endTE}
-                onChange={(newValue) => {
-                  setEndTE(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+            <DateTimePicker onChange={(e: Date) => setEndTE(e)} value={endTE} />
           </td>
 
           <td>{secondsToHours(timePassedE)}</td>
