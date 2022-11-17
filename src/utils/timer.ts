@@ -28,4 +28,4 @@ export const secondsToDate = (seconds: number) => {
   return `${date.getDate()}-${month}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
 };
 
-export const itemsPerPage = 3;
+export const itemsPerPage = 5;

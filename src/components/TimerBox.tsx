@@ -8,6 +8,7 @@ import {
   StopIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/solid";
+import Loading from "./Loading";
 
 const currRemaining = (
   totalTime: number,
@@ -76,6 +77,7 @@ export default function TimerBox({ timerId }: { timerId: string }) {
     }
   }, [data, timeRem.data]);
 
+  if (isLoading) return <Loading />;
   if (!data) return <p>no data</p>;
 
   const refetchRemTime = async () => {
@@ -123,80 +125,76 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   return (
     <>
       <div className="card w-fit bg-base-100 shadow-xl">
-        {isLoading ? (
-          <p className="text-center">Loading...</p>
-        ) : (
-          <div className="card-body">
-            <h2 className="card-title">{data.title}</h2>
-            <p>{data.description}</p>
-            <p>
-              Total Time:
-              <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": tTime[0] } as any}></span>:
-                <span style={{ "--value": tTime[1] } as any}></span>:
-                <span style={{ "--value": tTime[2] } as any}></span>
-              </span>
-            </p>
-            <p>
-              Time Remaining:
-              <span className="countdown font-mono text-2xl">
-                <span style={{ "--value": currRem[0] } as any}></span>:
-                <span style={{ "--value": currRem[1] } as any}></span>:
-                <span style={{ "--value": currRem[2] } as any}></span>
-              </span>
-            </p>
+        <div className="card-body">
+          <h2 className="card-title">{data.title}</h2>
+          <p>{data.description}</p>
+          <p>
+            Total Time:
+            <span className="countdown font-mono text-2xl">
+              <span style={{ "--value": tTime[0] } as any}></span>:
+              <span style={{ "--value": tTime[1] } as any}></span>:
+              <span style={{ "--value": tTime[2] } as any}></span>
+            </span>
+          </p>
+          <p>
+            Time Remaining:
+            <span className="countdown font-mono text-2xl">
+              <span style={{ "--value": currRem[0] } as any}></span>:
+              <span style={{ "--value": currRem[1] } as any}></span>:
+              <span style={{ "--value": currRem[2] } as any}></span>
+            </span>
+          </p>
 
-            <div className="card-actions justify-end">
-              {isRefetching ? (
-                <button className="loading btn-outline btn-success btn"></button>
-              ) : (
-                <button
-                  onClick={refetchRemTime}
-                  className="btn-outline btn-success btn"
-                >
-                  <ArrowPathIcon className="h-6 w-6" />
-                </button>
-              )}
-              {isUpdating ? (
-                <>
-                  {data.isRunning ? (
-                    <button className="loading btn-outline btn-error btn"></button>
-                  ) : (
-                    <button className="loading btn-outline btn-success btn"></button>
-                  )}
-                </>
-              ) : (
-                <>
-                  {data.isRunning ? (
-                    <button
-                      onClick={stopTimer}
-                      className="btn-outline btn-error btn"
-                    >
-                      <StopIcon className="h-6 w-6" />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={startTimer}
-                      className="btn-outline btn-success btn"
-                    >
-                      <PlayIcon className="h-6 w-6" />
-                    </button>
-                  )}
-                </>
-              )}
-              {isDeleting ? (
-                <button className="loading btn-outline btn-error btn" />
-              ) : (
-                <button
-                  onClick={deleteTimer}
-                  className="btn-outline btn-error btn"
-                >
-                  <TrashIcon className="h-6 w-6" />
-                </button>
-              )}
-            </div>
+          <div className="card-actions justify-end">
+            {isRefetching ? (
+              <button className="loading btn-outline btn-success btn"></button>
+            ) : (
+              <button
+                onClick={refetchRemTime}
+                className="btn-outline btn-success btn"
+              >
+                <ArrowPathIcon className="h-6 w-6" />
+              </button>
+            )}
+            {isUpdating ? (
+              <>
+                {data.isRunning ? (
+                  <button className="loading btn-outline btn-error btn"></button>
+                ) : (
+                  <button className="loading btn-outline btn-success btn"></button>
+                )}
+              </>
+            ) : (
+              <>
+                {data.isRunning ? (
+                  <button
+                    onClick={stopTimer}
+                    className="btn-outline btn-error btn"
+                  >
+                    <StopIcon className="h-6 w-6" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={startTimer}
+                    className="btn-outline btn-success btn"
+                  >
+                    <PlayIcon className="h-6 w-6" />
+                  </button>
+                )}
+              </>
+            )}
+            {isDeleting ? (
+              <button className="loading btn-outline btn-error btn" />
+            ) : (
+              <button
+                onClick={deleteTimer}
+                className="btn-outline btn-error btn"
+              >
+                <TrashIcon className="h-6 w-6" />
+              </button>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </>
   );

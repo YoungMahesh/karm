@@ -13,6 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
 import TextField from "@mui/material/TextField";
+import Loading from "./Loading";
 
 export default function TimerBox({
   timerSessionId,
@@ -56,7 +57,7 @@ export default function TimerBox({
     }
   }, [startTE, endTE]);
 
-  if (isLoading) return <p className="text-center">Loading...</p>;
+  if (isLoading) return <Loading />;
   if (!data) return <p>no data</p>;
 
   const deleteTimerSession = async () => {
