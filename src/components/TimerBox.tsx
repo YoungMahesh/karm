@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { currTime, itemsPerPage, secondsToHours1, wait } from "../utils/timer";
+import { currTime, hoursToSeconds, secondsToHours1 } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 import {
   PencilIcon,
@@ -9,6 +9,7 @@ import {
   ArrowPathIcon,
 } from "@heroicons/react/24/solid";
 import Loading from "./Loading";
+import Swal from "sweetalert2";
 
 const currRemaining = (
   totalTime: number,
@@ -16,7 +17,9 @@ const currRemaining = (
   timePassed: number,
   isRunning: boolean
 ) => {
-  const _timeRemaining = timePassed ? totalTime - timePassed : totalTime;
+  const _timeRemaining0 =
+    totalTime - timePassed > 0 ? totalTime - timePassed : 0;
+  const _timeRemaining = timePassed ? _timeRemaining0 : totalTime;
   if (isRunning) {
     const timeReduced = currTime() - lastUpdated;
     if (timeReduced > _timeRemaining) return 0;
@@ -24,14 +27,23 @@ const currRemaining = (
   }
   return _timeRemaining;
 };
+
+const Swal0 = Swal.mixin({
+  customClass: {
+    confirmButton: "btn btn-success mr-2",
+    cancelButton: "btn btn-error",
+  },
+  buttonsStyling: false,
+});
 export default function TimerBox({ timerId }: { timerId: string }) {
   const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
+  const updateTotalT = trpc.timer.updateTotalTime.useMutation();
   const getAll = trpc.timer.getAllIds.useQuery({ page: 1, limit: 10 });
   const startT = trpc.timer.start.useMutation();
   const stopT = trpc.timer.stop.useMutation();
   const deleteT = trpc.timer.delete.useMutation();
   const createTS = trpc.timerSessions.create.useMutation();
-  const timeRem = trpc.timer.getTotalTime.useQuery({ timerId });
+  const timePass = trpc.timer.getTotalPassedTime.useQuery({ timerId });
 
   const [isRefetching, setIsRefetching] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -41,13 +53,13 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   const [currRem, setCurrRem] = useState<[number, number, number]>([0, 0, 0]);
 
   const updateRemTime = () => {
-    if (data && timeRem.data) {
+    if (data && timePass.data) {
       setCurrRem(
         secondsToHours1(
           currRemaining(
             data.totalTime!,
             data.updatedAt!,
-            timeRem.data._sum.timePassed!,
+            timePass.data._sum.timePassed!,
             data.isRunning!
           )
         )
@@ -67,22 +79,22 @@ export default function TimerBox({ timerId }: { timerId: string }) {
   //   }
   // }, [currRem]);
 
-  useEffect(() => updateRemTime(), [data, timeRem.data]);
+  useEffect(() => updateRemTime(), [data, timePass.data]);
 
   useEffect(() => {
-    if (data && timeRem.data) {
+    if (data && timePass.data) {
       return setTTime(secondsToHours1(data.totalTime));
     } else {
       return setTTime([0, 0, 0]);
     }
-  }, [data, timeRem.data]);
+  }, [data, timePass.data]);
 
   if (isLoading) return <Loading />;
   if (!data) return <p>no data</p>;
 
   const refetchRemTime = async () => {
     setIsRefetching(true);
-    await timeRem.refetch();
+    await timePass.refetch();
     updateRemTime();
     setIsRefetching(false);
   };
@@ -122,9 +134,63 @@ export default function TimerBox({ timerId }: { timerId: string }) {
     setIsDeleting(false);
   };
 
+  const updateTotalTime = async (newTotalHours: string) => {
+    if (timePass.data !== undefined && timePass.data._sum.timePassed !== null) {
+      const _newTimeInSec = hoursToSeconds(parseFloat(newTotalHours));
+      if (_newTimeInSec <= timePass.data._sum.timePassed)
+        throw new Error("New-time must be greater than Time-passed");
+    } else throw new Error("Could not fetch time-passed");
+
+    await updateTotalT.mutateAsync({
+      timerId: data.id,
+      totalTime: hoursToSeconds(parseFloat(newTotalHours)),
+    });
+    await refetch();
+    return newTotalHours;
+  };
+
+  const onEditClick = () => {
+    Swal0.fire({
+      title: "Modify Total Time",
+      text: "Enter new total time in hours (e.g. 1.5)",
+      input: "text",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Modify",
+      showLoaderOnConfirm: true,
+      preConfirm: (newTotalHours) => updateTotalTime(newTotalHours),
+
+      allowOutsideClick: () => !Swal.isLoading(),
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal0.fire({
+            text: `Updated TotalTime to ${result.value} hours`,
+            icon: "success",
+          });
+        }
+      })
+      .catch((err) => {
+        Swal0.fire({
+          icon: "error",
+          title: "Got Error",
+          text: err.message,
+        });
+      });
+  };
+
   return (
     <>
-      <div className="card w-fit bg-base-100 shadow-xl">
+      <div
+        className="card w-fit bg-base-100 shadow-xl"
+        style={{
+          background: data.isRunning
+            ? "linear-gradient(to right, #B0F3F1,#FFCFDF)"
+            : "inherit",
+        }}
+      >
         <div className="card-body">
           <h2 className="card-title">{data.title}</h2>
           <p>{data.description}</p>
@@ -156,6 +222,12 @@ export default function TimerBox({ timerId }: { timerId: string }) {
                 <ArrowPathIcon className="h-6 w-6" />
               </button>
             )}
+            <button
+              onClick={onEditClick}
+              className="btn-outline btn-success btn"
+            >
+              <PencilIcon className="h-6 w-6" />
+            </button>
             {isUpdating ? (
               <>
                 {data.isRunning ? (

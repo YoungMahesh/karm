@@ -36,6 +36,22 @@ export const timerRouter = router({
       });
     }),
 
+  updateTotalTime: protectedProcedure
+    .input(
+      z.object({
+        timerId: z.string(),
+        totalTime: z.number(),
+      })
+    )
+    .mutation((req) => {
+      return req.ctx.prisma.timer.update({
+        where: { id: req.input.timerId },
+        data: {
+          totalTime: req.input.totalTime,
+        },
+      });
+    }),
+
   start: protectedProcedure
     .input(
       z.object({
@@ -72,7 +88,7 @@ export const timerRouter = router({
       });
     }),
 
-  getTotalTime: protectedProcedure
+  getTotalPassedTime: protectedProcedure
     .input(
       z.object({
         timerId: z.string(),
