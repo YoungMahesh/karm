@@ -10,6 +10,10 @@ const Layout = ({ children, title }: { children: any; title: string }) => {
     <>
       <Head>
         <title>{title}</title>
+        <meta
+          name="google-site-verification"
+          content="E2Obl_Qx1sRRwNoccLsBR6yaeQa3yJBTUSIJacrdmJY"
+        />
         <link rel="icon" href="/logo.svg" />
       </Head>
 
