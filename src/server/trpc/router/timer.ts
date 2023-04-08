@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { currTime } from "../../../utils/timer";
-import { protectedProcedure, router } from "../trpc";
+import { protected2Procedure, protectedProcedure, router } from "../trpc";
 
 export const timerRouter = router({
   create: protectedProcedure
@@ -101,7 +101,7 @@ export const timerRouter = router({
       });
     }),
 
-  getAllIds: protectedProcedure
+  getAllIds: protected2Procedure
     .input(
       z.object({
         page: z.number(),
@@ -110,7 +110,11 @@ export const timerRouter = router({
     )
     .query((req) => {
       return req.ctx.prisma.timer.findMany({
-        where: { userEmail: req.ctx.session.user.email },
+        where: {
+          user: {
+            userId: req.ctx.userId,
+          },
+        },
         select: { id: true },
         orderBy: { title: "asc" },
         skip: (req.input.page - 1) * req.input.limit,

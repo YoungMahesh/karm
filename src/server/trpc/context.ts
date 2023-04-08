@@ -4,9 +4,15 @@ import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "../common/get-server-auth-session";
 import { prisma } from "../db/client";
+import { getAuth } from "@clerk/nextjs/server";
+import type {
+  SignedInAuthObject,
+  SignedOutAuthObject,
+} from "@clerk/nextjs/dist/api";
 
 type CreateContextOptions = {
   session: Session | null;
+  user: SignedInAuthObject | SignedOutAuthObject;
 };
 
 /** Use this helper for:
@@ -18,6 +24,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    user: opts.user,
   };
 };
 
@@ -31,8 +38,14 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   // Get the session from the server using the unstable_getServerSession wrapper function
   const session = await getServerAuthSession({ req, res });
 
+  function getUserFromHeader() {
+    return getAuth(req);
+  }
+  const user = getUserFromHeader();
+
   return await createContextInner({
     session,
+    user,
   });
 };
 

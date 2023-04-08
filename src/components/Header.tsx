@@ -5,13 +5,15 @@ import { trpc } from "../utils/trpc";
 import logo from "../../public/logo.svg";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import { useAuth, UserButton } from "@clerk/nextjs";
 
 export default function Header() {
-  const { data: sessionData, status } = useSession();
-  const { data } = trpc.profile.get.useQuery();
+  const { isSignedIn, userId } = useAuth();
+  // const { data: sessionData, status } = useSession();
+  // const { data } = trpc.profile.get.useQuery();
   const router = useRouter();
 
-  if (status === "loading") return <p className="text-center">Loading...</p>;
+  // if (status === "loading") return <p className="text-center">Loading...</p>;
 
   return (
     <header className="navbar ">
@@ -27,7 +29,7 @@ export default function Header() {
       </div>
       <div className="flex flex-1 justify-end px-2">
         <div className="flex items-stretch">
-          {sessionData ? (
+          {/* {sessionData ? (
             <div className="dropdown-end dropdown">
               <label tabIndex={0} className="btn-ghost rounded-btn btn">
                 <Bars3Icon className="h-8 w-8 cursor-pointer text-blue-600 sm:h-10 sm:w-10" />
@@ -63,7 +65,9 @@ export default function Header() {
             <button className="btn-primary btn" onClick={() => signIn()}>
               Sign In
             </button>
-          )}
+          )} */}
+
+          {isSignedIn ? <UserButton /> : null}
         </div>
       </div>
     </header>

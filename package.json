@@ -17,6 +17,7 @@
     "git1"
   ],
   "dependencies": {
+    "@clerk/nextjs": "^4.14.0",
     "@heroicons/react": "^2.0.13",
     "@next-auth/prisma-adapter": "^1.0.4",
     "@prisma/client": "^4.5.0",
