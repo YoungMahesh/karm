@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protected2Procedure, router } from "../trpc";
 
 export const timerSessionsRouter = router({
-  create: protectedProcedure
+  create: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
@@ -11,32 +11,33 @@ export const timerSessionsRouter = router({
         timePassed: z.number(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timerSessions.create({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timerSessions.create({
         data: {
           timerId: req.input.timerId,
           startTime: req.input.startTime,
           endTime: req.input.endTime,
           timePassed: req.input.timePassed,
-          userEmail: req.ctx.session.user.email,
+          userId: req.ctx.userId,
         },
       });
     }),
 
-  get: protectedProcedure
+  get: protected2Procedure
     .input(
       z.object({
         timerSessionId: z.string(),
       })
     )
-    .query((req) => {
-      return req.ctx.prisma.timerSessions.findUnique({
+    .query(async (req) => {
+      const tSession = await req.ctx.prisma.timerSessions.findUnique({
         where: { id: req.input.timerSessionId },
         include: { timer: { select: { title: true } } },
       });
+      return tSession;
     }),
 
-  getAllIds: protectedProcedure
+  getAllIds: protected2Procedure
     .input(
       z.object({
         page: z.number(),
@@ -44,23 +45,24 @@ export const timerSessionsRouter = router({
       })
     )
 
-    .query((req) => {
-      return req.ctx.prisma.timerSessions.findMany({
-        where: { userEmail: req.ctx.session.user.email },
+    .query(async (req) => {
+      const tSessions = await req.ctx.prisma.timerSessions.findMany({
+        where: { userId: req.ctx.userId },
         select: { id: true },
         orderBy: { endTime: "desc" },
         skip: (req.input.page - 1) * req.input.limit,
         take: req.input.limit,
       });
+      return tSessions;
     }),
 
-  getAllIdsCount: protectedProcedure.query((req) => {
-    return req.ctx.prisma.timerSessions.count({
-      where: { userEmail: req.ctx.session.user.email },
+  getAllIdsCount: protected2Procedure.query(async (req) => {
+    return await req.ctx.prisma.timerSessions.count({
+      where: { userId: req.ctx.userId },
     });
   }),
 
-  update: protectedProcedure
+  update: protected2Procedure
     .input(
       z.object({
         timerSessionId: z.string(),
@@ -69,8 +71,8 @@ export const timerSessionsRouter = router({
         timePassed: z.number(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timerSessions.update({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timerSessions.update({
         where: {
           id: req.input.timerSessionId,
         },
@@ -82,10 +84,10 @@ export const timerSessionsRouter = router({
       });
     }),
 
-  delete: protectedProcedure
+  delete: protected2Procedure
     .input(z.object({ timerSessionId: z.string() }))
-    .mutation((req) => {
-      return req.ctx.prisma.timerSessions.delete({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timerSessions.delete({
         where: {
           id: req.input.timerSessionId,
         },

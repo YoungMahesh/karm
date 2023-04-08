@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Header from "../components/Header";
 import CreateTimer from "../components/CreateTimer";
-import { useSession } from "next-auth/react";
+import { trpc } from "../utils/trpc";
 
 const Layout = ({ children, title }: { children: any; title: string }) => {
-  const { data } = useSession();
+  const { data } = trpc.profile.get.useQuery();
 
   return (
     <>

@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { itemsPerPage } from "../utils/timer";
 import Notify from "./Nofity";
 import Loading from "./Loading";
+import { useAuth } from "@clerk/nextjs";
 
 export default function TimerHistoryList() {
+  const { isSignedIn } = useAuth();
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const session = useSession();
   const { isLoading, data } = trpc.timerSessions.getAllIdsCount.useQuery();
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function TimerHistoryList() {
 
   return (
     <>
-      {session.data?.user ? (
+      {isSignedIn ? (
         <div className="flex flex-col items-center">
           {page > 0 ? (
             <Table1>

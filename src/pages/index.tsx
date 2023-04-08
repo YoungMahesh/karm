@@ -11,7 +11,7 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const { isSignedIn, userId } = useAuth();
-  const { data } = trpc.profile2.get.useQuery();
+  const { data } = trpc.profile.get.useQuery();
 
   const session = useSession();
 
@@ -28,10 +28,7 @@ const Home: NextPage = () => {
         <Notify>Sign In to Manage your timers</Notify>
       )} */}
       <div>
-        <p>
-          <span>data is: </span>
-          <span>{data ? data.userId : "not-available"}</span>
-        </p>
+        <p></p>
         <>
           {isSignedIn ? (
             <>

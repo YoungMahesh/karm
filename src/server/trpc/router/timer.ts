@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { currTime } from "../../../utils/timer";
-import { protected2Procedure, protectedProcedure, router } from "../trpc";
+import { protected2Procedure, router } from "../trpc";
 
 export const timerRouter = router({
-  create: protectedProcedure
+  create: protected2Procedure
     .input(
       z.object({
         title: z.string(),
@@ -11,40 +11,40 @@ export const timerRouter = router({
         totalTime: z.number(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timer.create({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timer.create({
         data: {
           title: req.input.title,
           description: req.input.description,
           totalTime: req.input.totalTime,
           updatedAt: currTime(),
           isRunning: false,
-          userEmail: req.ctx.session.user.email,
+          userId: req.ctx.userId,
         },
       });
     }),
 
-  get: protectedProcedure
+  get: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
       })
     )
-    .query((req) => {
-      return req.ctx.prisma.timer.findUnique({
+    .query(async (req) => {
+      return await req.ctx.prisma.timer.findUnique({
         where: { id: req.input.timerId },
       });
     }),
 
-  updateTotalTime: protectedProcedure
+  updateTotalTime: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
         totalTime: z.number(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timer.update({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timer.update({
         where: { id: req.input.timerId },
         data: {
           totalTime: req.input.totalTime,
@@ -52,15 +52,15 @@ export const timerRouter = router({
       });
     }),
 
-  start: protectedProcedure
+  start: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
         updatedAt: z.number(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timer.update({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timer.update({
         where: {
           id: req.input.timerId,
         },
@@ -71,14 +71,14 @@ export const timerRouter = router({
       });
     }),
 
-  stop: protectedProcedure
+  stop: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
       })
     )
-    .mutation((req) => {
-      return req.ctx.prisma.timer.update({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timer.update({
         where: {
           id: req.input.timerId,
         },
@@ -88,14 +88,14 @@ export const timerRouter = router({
       });
     }),
 
-  getTotalPassedTime: protectedProcedure
+  getTotalPassedTime: protected2Procedure
     .input(
       z.object({
         timerId: z.string(),
       })
     )
-    .query((req) => {
-      return req.ctx.prisma.timerSessions.aggregate({
+    .query(async (req) => {
+      return await req.ctx.prisma.timerSessions.aggregate({
         where: { timerId: req.input.timerId },
         _sum: { timePassed: true },
       });
@@ -108,12 +108,10 @@ export const timerRouter = router({
         limit: z.number(),
       })
     )
-    .query((req) => {
-      return req.ctx.prisma.timer.findMany({
+    .query(async (req) => {
+      return await req.ctx.prisma.timer.findMany({
         where: {
-          user: {
-            userId: req.ctx.userId,
-          },
+          userId: req.ctx.userId,
         },
         select: { id: true },
         orderBy: { title: "asc" },
@@ -122,10 +120,10 @@ export const timerRouter = router({
       });
     }),
 
-  delete: protectedProcedure
+  delete: protected2Procedure
     .input(z.object({ timerId: z.string() }))
-    .mutation((req) => {
-      return req.ctx.prisma.timer.delete({
+    .mutation(async (req) => {
+      return await req.ctx.prisma.timer.delete({
         where: {
           id: req.input.timerId,
         },

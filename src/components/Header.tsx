@@ -9,11 +9,9 @@ import { useAuth, UserButton } from "@clerk/nextjs";
 
 export default function Header() {
   const { isSignedIn, userId } = useAuth();
-  // const { data: sessionData, status } = useSession();
-  // const { data } = trpc.profile.get.useQuery();
-  const router = useRouter();
 
-  // if (status === "loading") return <p className="text-center">Loading...</p>;
+  const profile = trpc.profile.get.useQuery();
+  const router = useRouter();
 
   return (
     <header className="navbar ">
@@ -29,7 +27,7 @@ export default function Header() {
       </div>
       <div className="flex flex-1 justify-end px-2">
         <div className="flex items-stretch">
-          {/* {sessionData ? (
+          {isSignedIn ? (
             <div className="dropdown-end dropdown">
               <label tabIndex={0} className="btn-ghost rounded-btn btn">
                 <Bars3Icon className="h-8 w-8 cursor-pointer text-blue-600 sm:h-10 sm:w-10" />
@@ -44,9 +42,7 @@ export default function Header() {
                 <li>
                   <Link href="/history">History</Link>
                 </li>
-                <li>
-                  <Link href="/profile">{data?.name}</Link>
-                </li>
+
                 <li>
                   <a
                     href="https://github.com/YoungMahesh/timers"
@@ -56,16 +52,9 @@ export default function Header() {
                     Source Code
                   </a>
                 </li>
-                <li onClick={() => signOut()}>
-                  <a>Sign out</a>
-                </li>
               </ul>
             </div>
-          ) : (
-            <button className="btn-primary btn" onClick={() => signIn()}>
-              Sign In
-            </button>
-          )} */}
+          ) : null}
 
           {isSignedIn ? <UserButton /> : null}
         </div>
