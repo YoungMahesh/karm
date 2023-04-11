@@ -1,21 +1,23 @@
+import { useEffect } from "react";
 import { type NextPage } from "next";
 import TimersList from "../components/TimersList";
 import Layout from "../components/Layout";
 import PlusButton from "../components/PlusButton";
-import { useSession } from "next-auth/react";
+
 import { useAuth } from "@clerk/nextjs";
 import Loading from "../components/Loading";
 import { SignIn } from "@clerk/nextjs";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
-  const { isSignedIn } = useAuth();
-  const { data } = trpc.profile.get.useQuery();
+  const { isSignedIn, isLoaded } = useAuth();
 
-  const session = useSession();
+  useEffect(() => {
+    // calling this to register new userId in databae in case of sign-up
+    trpc.profile.get.useQuery();
+  }, []);
 
-  if (session.status === "loading") return <Loading />;
-
+  if (!isLoaded) return <Loading />;
   return (
     <Layout title="Timers">
       {isSignedIn ? (

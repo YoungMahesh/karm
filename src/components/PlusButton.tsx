@@ -1,10 +1,8 @@
-import { useSession } from "next-auth/react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useAuth } from "@clerk/nextjs";
 
 const PlusButton = () => {
-  const { isSignedIn, userId } = useAuth();
-  const { data } = useSession();
+  const { isSignedIn } = useAuth();
 
   return (
     <div>

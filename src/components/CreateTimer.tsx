@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import { hoursToSeconds } from "../utils/timer";
 import { trpc } from "../utils/trpc";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -79,7 +79,7 @@ const Input1 = ({
 }: {
   placeholder: string;
   value: string;
-  onChange: (_: any) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }) => (
   <input
     type="text"

@@ -1,7 +1,6 @@
 import { trpc } from "../utils/trpc";
 import TimerHistoryBox from "./TimerHistoryBox";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { itemsPerPage } from "../utils/timer";
 import Notify from "./Nofity";
 import Loading from "./Loading";
@@ -86,7 +85,7 @@ function TimerHistoryList1({ page, limit }: { page: number; limit: number }) {
   );
 }
 
-function Table1({ children }: { children: any }) {
+function Table1({ children }: { children: ReactElement }) {
   return (
     <div className="flex flex-wrap justify-center">
       <div>

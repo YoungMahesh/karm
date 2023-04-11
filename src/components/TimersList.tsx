@@ -32,11 +32,11 @@ export default function TimersList() {
         <Notify>
           <p className="flex flex-wrap">
             <span>
-              Note: Currently Timer seconds does not auto update, you need to
-              click on Refetch-Icon
+              Note: The timer seconds will not update automatically while the
+              timer is running. To see the updated timer value, kindly click on
             </span>
             &nbsp; (&quot;{<ArrowPathIcon className="h-6 w-6" />}&quot;) &nbsp;
-            <span> to see current remaining time</span>
+            <span> icon </span>
           </p>
         </Notify>
       </div>
