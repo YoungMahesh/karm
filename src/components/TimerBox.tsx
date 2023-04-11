@@ -38,7 +38,7 @@ const Swal0 = Swal.mixin({
   },
   buttonsStyling: false,
 });
-export default function TimerBox({ timerId }: { timerId: string }) {
+export default function TimerBox({ timerId }: { timerId: number }) {
   const { data, isLoading, refetch } = trpc.timer.get.useQuery({ timerId });
   const updateTotalT = trpc.timer.updateTotalTime.useMutation();
   const getAll = trpc.timer.getAllIds.useQuery({ page: 1, limit: 10 });

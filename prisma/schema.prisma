@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  userId         String          @unique
+  id            Int             @id @default(autoincrement())
+  userId        String          @unique
   timers        Timer[]
-  timerSessions2 TimerSessions[]
+  timerSessions TimerSessions[]
 }
 
 model Timer {
-  id            String          @id @default(cuid())
+  id            Int             @id @default(autoincrement())
   title         String
   description   String?
   totalTime     Int
@@ -29,12 +29,12 @@ model Timer {
 }
 
 model TimerSessions {
-  id         String @id @default(cuid())
-  timerId    String
+  id         Int    @id @default(autoincrement())
+  timerId    Int
   startTime  Int
   endTime    Int
   timePassed Int
   userId     String
-  timer     Timer  @relation(fields: [timerId], references: [id])
+  timer      Timer  @relation(fields: [timerId], references: [id])
   user       User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
 }

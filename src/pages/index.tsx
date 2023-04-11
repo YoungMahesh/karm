@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { type NextPage } from "next";
 import TimersList from "../components/TimersList";
@@ -12,9 +13,11 @@ import { trpc } from "../utils/trpc";
 const Home: NextPage = () => {
   const { isSignedIn, isLoaded } = useAuth();
 
+  const { refetch } = trpc.profile.get.useQuery(undefined, { enabled: false });
+
   useEffect(() => {
     // calling this to register new userId in databae in case of sign-up
-    trpc.profile.get.useQuery();
+    void refetch();
   }, []);
 
   if (!isLoaded) return <Loading />;

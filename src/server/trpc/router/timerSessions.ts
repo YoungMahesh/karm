@@ -5,7 +5,7 @@ export const timerSessionsRouter = router({
   create: protected2Procedure
     .input(
       z.object({
-        timerId: z.string(),
+        timerId: z.number(),
         startTime: z.number(),
         endTime: z.number(),
         timePassed: z.number(),
@@ -26,7 +26,7 @@ export const timerSessionsRouter = router({
   get: protected2Procedure
     .input(
       z.object({
-        timerSessionId: z.string(),
+        timerSessionId: z.number(),
       })
     )
     .query(async (req) => {
@@ -65,7 +65,7 @@ export const timerSessionsRouter = router({
   update: protected2Procedure
     .input(
       z.object({
-        timerSessionId: z.string(),
+        timerSessionId: z.number(),
         startTime: z.number(),
         endTime: z.number(),
         timePassed: z.number(),
@@ -85,7 +85,7 @@ export const timerSessionsRouter = router({
     }),
 
   delete: protected2Procedure
-    .input(z.object({ timerSessionId: z.string() }))
+    .input(z.object({ timerSessionId: z.number() }))
     .mutation(async (req) => {
       return await req.ctx.prisma.timerSessions.delete({
         where: {

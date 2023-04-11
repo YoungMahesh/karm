@@ -26,14 +26,14 @@ export const trpc = createTRPCNext<AppRouter>({
         }),
       ],
       queryClientConfig: {
-        defaultOptions: {
-          queries: {
-            retry: false,
-            refetchOnWindowFocus: false,
-            refetchOnMount: false,
-            staleTime: Infinity,
-          },
-        },
+        // defaultOptions: {
+        //   queries: {
+        //     retry: false,
+        //     refetchOnWindowFocus: false,
+        //     refetchOnMount: false,
+        //     staleTime: Infinity,
+        //   },
+        // },
       },
     };
   },
