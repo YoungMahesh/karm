@@ -89,12 +89,12 @@ function TimerHistoryList1({ page, limit }: { page: number; limit: number }) {
 function Table1({ children }: { children: any }) {
   return (
     <div className="flex flex-wrap justify-center">
-      <div className="overflow-x-auto">
+      <div>
         <table className="table w-full">
           <thead>
             <tr>
               <th></th>
-              <th>Title</th>
+              <th>TimerTitle</th>
               <th>StartTime</th>
               <th>EndTime</th>
               <th>TimePassed</th>

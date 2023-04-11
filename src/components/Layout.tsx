@@ -1,11 +1,15 @@
 import Head from "next/head";
 import Header from "../components/Header";
 import CreateTimer from "../components/CreateTimer";
-import { trpc } from "../utils/trpc";
+import { type ReactElement } from "react";
 
-const Layout = ({ children, title }: { children: any; title: string }) => {
-  const { data } = trpc.profile.get.useQuery();
-
+const Layout = ({
+  children,
+  title,
+}: {
+  children: ReactElement;
+  title: string;
+}) => {
   return (
     <>
       <Head>

@@ -1,16 +1,13 @@
-import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { trpc } from "../utils/trpc";
-import logo from "../../public/logo.svg";
-import { Bars3Icon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 import { useAuth, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Bars3Icon } from "@heroicons/react/24/solid";
+import logo from "../../public/logo.svg";
 
 export default function Header() {
-  const { isSignedIn, userId } = useAuth();
+  const { isSignedIn } = useAuth();
 
-  const profile = trpc.profile.get.useQuery();
   const router = useRouter();
 
   return (
@@ -26,8 +23,8 @@ export default function Header() {
         />
       </div>
       <div className="flex flex-1 justify-end px-2">
-        <div className="flex items-stretch">
-          {isSignedIn ? (
+        {isSignedIn ? (
+          <div className="flex items-center">
             <div className="dropdown-end dropdown">
               <label tabIndex={0} className="btn-ghost rounded-btn btn">
                 <Bars3Icon className="h-8 w-8 cursor-pointer text-blue-600 sm:h-10 sm:w-10" />
@@ -54,10 +51,9 @@ export default function Header() {
                 </li>
               </ul>
             </div>
-          ) : null}
-
-          {isSignedIn ? <UserButton /> : null}
-        </div>
+            <UserButton />
+          </div>
+        ) : null}
       </div>
     </header>
   );
