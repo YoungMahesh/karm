@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1).
@@ -6,11 +8,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
+import { getAuth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 
 /**
@@ -21,7 +23,11 @@ import { db } from "~/server/db";
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
-type CreateContextOptions = Record<string, never>;
+type CreateContextOptions =
+  | Record<string, never>
+  | {
+      userId: string | null;
+    };
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -36,6 +42,7 @@ type CreateContextOptions = Record<string, never>;
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
     db,
+    userId: _opts.userId,
   };
 };
 
@@ -46,7 +53,8 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+  const { userId } = getAuth(_opts.req);
+  return createInnerTRPCContext({ userId: userId });
 };
 
 /**
@@ -93,3 +101,19 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+const isAuthed = t.middleware((opts) => {
+  const { ctx } = opts;
+  if (!ctx.userId) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return opts.next({
+    ctx: {
+      prisma: db,
+      userId: ctx.userId,
+    },
+  });
+});
+
+// you can reuse this for any procedure
+export const protected2Procedure = t.procedure.use(isAuthed);

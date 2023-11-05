@@ -1,5 +1,8 @@
 import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
+import { profileRouter } from "./routers/profile";
+import { timerRouter } from "./routers/timer";
+import { timerSessionsRouter } from "./routers/timerSessions";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +11,9 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
+  profile: profileRouter,
+  timer: timerRouter,
+  timerSessions: timerSessionsRouter
 });
 
 // export type definition of API

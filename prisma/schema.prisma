@@ -1,20 +1,42 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Timer {
+  id            Int             @id @default(autoincrement())
+  title         String
+  description   String?
+  totalTime     Int
+  updatedAt     Int
+  isRunning     Boolean
+  userId        String
+  User          User            @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  TimerSessions TimerSessions[]
 
-    @@index([name])
+  @@unique([userId, title])
+}
+
+model TimerSessions {
+  id         Int    @id @default(autoincrement())
+  timerId    Int
+  startTime  Int
+  endTime    Int
+  timePassed Int
+  userId     String
+  Timer      Timer  @relation(fields: [timerId], references: [id], onDelete: Cascade)
+  User       User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@unique([id, userId])
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  userId        String          @unique
+  Timer         Timer[]
+  TimerSessions TimerSessions[]
 }
