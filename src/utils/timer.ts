@@ -3,7 +3,7 @@ export const hoursToSeconds = (hours: number) => hours * 60 * 60;
 export const secondsToHours = (seconds: number) => {
   const hoursRemaining = Math.floor(seconds / 60 / 60);
   const minutesRemaining = Math.floor(
-    (seconds - hoursRemaining * 60 * 60) / 60
+    (seconds - hoursRemaining * 60 * 60) / 60,
   );
   const secondsRemaining =
     seconds - hoursRemaining * 60 * 60 - minutesRemaining * 60;
@@ -12,7 +12,7 @@ export const secondsToHours = (seconds: number) => {
 export const secondsToHours1 = (seconds: number): [number, number, number] => {
   const hoursRemaining = Math.floor(seconds / 60 / 60);
   const minutesRemaining = Math.floor(
-    (seconds - hoursRemaining * 60 * 60) / 60
+    (seconds - hoursRemaining * 60 * 60) / 60,
   );
   const secondsRemaining =
     seconds - hoursRemaining * 60 * 60 - minutesRemaining * 60;

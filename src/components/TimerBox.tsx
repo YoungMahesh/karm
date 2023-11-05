@@ -24,7 +24,7 @@ const currRemaining = (
   totalTime: number,
   lastUpdated: number,
   timePassed: number | null,
-  isRunning: boolean
+  isRunning: boolean,
 ) => {
   const _timePassed = timePassed ? timePassed : 0;
   const _timeRemaining0 =
@@ -75,9 +75,9 @@ export default function TimerBox({
     if (data && timePass.data) {
       const _currRemSeconds = currRemaining(
         totalTime,
-        data.updatedAt!,
+        data.updatedAt,
         timePass.data._sum.timePassed,
-        data.isRunning
+        data.isRunning,
       );
 
       const _currRemInHours = secondsToHours1(_currRemSeconds);
@@ -116,7 +116,7 @@ export default function TimerBox({
     if (data) {
       const _totalTime0 = secondsToHours1(data.totalTime);
       const _totalTime = _totalTime0.map((t) =>
-        t.toString().length === 1 ? `0${t}` : t
+        t.toString().length === 1 ? `0${t}` : t,
       ) as [string, string, string];
       setTTime(_totalTime);
       setIsRunning1(data.isRunning);
@@ -186,7 +186,7 @@ export default function TimerBox({
 
   const updateTotalTime = async (newTotalHours: string) => {
     if (timePass.data !== undefined) {
-      const _timePassed = timePass.data._sum.timePassed || 0;
+      const _timePassed = timePass.data._sum.timePassed ?? 0;
       const _newTimeInSec = hoursToSeconds(parseFloat(newTotalHours));
       if (_newTimeInSec <= _timePassed)
         throw new Error("New-time must be greater than Time-passed");
@@ -217,14 +217,14 @@ export default function TimerBox({
     })
       .then((result) => {
         if (result.isConfirmed) {
-          Swal0.fire({
+          void Swal0.fire({
             text: `Updated TotalTime to ${result.value} hours`,
             icon: "success",
           });
         }
       })
       .catch((err) => {
-        Swal0.fire({
+        void Swal0.fire({
           icon: "error",
           title: "Got Error",
           text: err.message,
@@ -264,16 +264,16 @@ export default function TimerBox({
           <div className="card-actions justify-center pt-2">
             <button
               onClick={onEditClick}
-              className="btn-outline btn-success btn"
+              className="btn btn-success btn-outline"
             >
               <PencilIcon className="h-6 w-6" />
             </button>
             {isUpdating ? (
               <>
                 {isRunning1 ? (
-                  <button className="btn-outline loading btn-error btn"></button>
+                  <button className="btn btn-error btn-outline loading"></button>
                 ) : (
-                  <button className="btn-outline loading btn-success btn"></button>
+                  <button className="btn btn-success btn-outline loading"></button>
                 )}
               </>
             ) : (
@@ -281,14 +281,14 @@ export default function TimerBox({
                 {isRunning1 ? (
                   <button
                     onClick={stopTimer}
-                    className="btn-outline btn-error btn"
+                    className="btn btn-error btn-outline"
                   >
                     <StopIcon className="h-6 w-6" />
                   </button>
                 ) : (
                   <button
                     onClick={startTimer}
-                    className="btn-outline btn-success btn"
+                    className="btn btn-success btn-outline"
                   >
                     <PlayIcon className="h-6 w-6" />
                   </button>
@@ -296,11 +296,11 @@ export default function TimerBox({
               </>
             )}
             {isDeleting ? (
-              <button className="btn-outline loading btn-error btn" />
+              <button className="btn btn-error btn-outline loading" />
             ) : (
               <button
                 onClick={deleteTimer}
-                className="btn-outline btn-error btn"
+                className="btn btn-error btn-outline"
               >
                 <TrashIcon className="h-6 w-6" />
               </button>

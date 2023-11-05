@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { type ChangeEvent, useState } from "react";
 import { hoursToSeconds } from "~/utils/timer";
-// import { trpc } from "../utils/trpc";
 import { api } from "~/utils/api";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
@@ -69,9 +68,9 @@ export default function CreateTimer() {
             />
 
             {isCreating ? (
-              <button className="loading btn" />
+              <button className="btn loading" />
             ) : (
-              <button onClick={createTimer} className="btn-primary btn">
+              <button onClick={createTimer} className="btn btn-primary">
                 Create
               </button>
             )}
@@ -94,7 +93,7 @@ const Input1 = ({
   <input
     type="text"
     placeholder={placeholder}
-    className="input-bordered input mb-2 w-full max-w-xs"
+    className="input input-bordered mb-2 w-full max-w-xs"
     value={value}
     onChange={onChange}
     required

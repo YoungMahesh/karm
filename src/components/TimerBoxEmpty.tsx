@@ -7,7 +7,7 @@ export default function TimerBoxEmpty() {
         <div className="card-actions justify-end">
           <label
             htmlFor="my-drawer-4"
-            className="btn-primary btn cursor-pointer"
+            className="btn btn-primary cursor-pointer"
           >
             Create
           </label>

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// import { trpc } from "../utils/trpc";
 import TimerBox from "./TimerBox";
 import Loading from "./Loading";
 import TimerBoxEmpty from "./TimerBoxEmpty";

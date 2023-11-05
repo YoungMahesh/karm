@@ -2,10 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// import { type User } from "@prisma/client";
-import {  createTRPCRouter, protected2Procedure } from "~/server/api/trpc";
+import { createTRPCRouter, protected2Procedure } from "~/server/api/trpc";
 import { z } from "zod";
-
 
 export const timerSessionsRouter = createTRPCRouter({
   create: protected2Procedure
@@ -15,7 +13,7 @@ export const timerSessionsRouter = createTRPCRouter({
         startTime: z.number(),
         endTime: z.number(),
         timePassed: z.number(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timerSessions.create({
@@ -33,7 +31,7 @@ export const timerSessionsRouter = createTRPCRouter({
     .input(
       z.object({
         timerSessionId: z.number(),
-      })
+      }),
     )
     .query(async (req) => {
       const tSession = await req.ctx.prisma.timerSessions.findUnique({
@@ -48,7 +46,7 @@ export const timerSessionsRouter = createTRPCRouter({
       z.object({
         page: z.number(),
         limit: z.number(),
-      })
+      }),
     )
 
     .query(async (req) => {
@@ -75,7 +73,7 @@ export const timerSessionsRouter = createTRPCRouter({
         startTime: z.number(),
         endTime: z.number(),
         timePassed: z.number(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timerSessions.update({

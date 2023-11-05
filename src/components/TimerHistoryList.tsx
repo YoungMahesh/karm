@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// import { trpc } from "../utils/trpc";
 import TimerHistoryBox from "./TimerHistoryBox";
 import { useEffect, useState } from "react";
 import { itemsPerPage } from "../utils/timer";
@@ -47,7 +46,7 @@ export default function TimerHistoryList() {
                   <button
                     key={idx}
                     onClick={() => setPage(idx + 1)}
-                    className={idx === page - 1 ? "btn-active btn" : "btn"}
+                    className={idx === page - 1 ? "btn btn-active" : "btn"}
                   >
                     {idx + 1}
                   </button>

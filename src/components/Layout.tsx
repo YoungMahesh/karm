@@ -21,7 +21,7 @@ const Layout = ({
         <link rel="icon" href="/logo.svg" />
       </Head>
 
-      <main data-theme="cupcake" className="drawer">
+      <main className="drawer font-sans">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
 
         <div className="drawer-content">

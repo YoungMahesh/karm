@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Bars3Icon } from "@heroicons/react/24/solid";
-// import logo from "../../public/logo.svg";
 
 export default function Header() {
   const { isSignedIn } = useAuth();
@@ -12,10 +11,10 @@ export default function Header() {
   const router = useRouter();
 
   return (
-    <header className="navbar ">
+    <header className="navbar">
       <div className="flex-1 px-2 lg:flex-none">
         <Image
-          src={'/logo.svg'}
+          src={"/logo.svg"}
           width={50}
           height={50}
           alt="Timers"
@@ -27,14 +26,11 @@ export default function Header() {
       <div className="flex flex-1 justify-end px-2">
         {isSignedIn ? (
           <div className="flex items-center">
-            <div className="dropdown-end dropdown">
-              <label tabIndex={0} className="btn-ghost rounded-btn btn">
+            <details className="dropdown dropdown-end">
+              <summary className="btn m-1">
                 <Bars3Icon className="h-8 w-8 cursor-pointer text-blue-600 sm:h-10 sm:w-10" />
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu rounded-box mt-4 w-52 bg-base-100 p-2 shadow"
-              >
+              </summary>
+              <ul className="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow">
                 <li>
                   <Link href="/">Home</Link>
                 </li>
@@ -52,8 +48,8 @@ export default function Header() {
                   </a>
                 </li>
               </ul>
-            </div>
-            <UserButton />
+            </details>
+            <UserButton afterSignOutUrl="/" />
           </div>
         ) : null}
       </div>

@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-// import { type User } from "@prisma/client";
-import {  createTRPCRouter, protected2Procedure } from "~/server/api/trpc";
+import { createTRPCRouter, protected2Procedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { currTime } from "~/utils/timer";
 
@@ -14,7 +13,7 @@ export const timerRouter = createTRPCRouter({
         title: z.string(),
         description: z.string(),
         totalTime: z.number(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timer.create({
@@ -33,7 +32,7 @@ export const timerRouter = createTRPCRouter({
     .input(
       z.object({
         timerId: z.number(),
-      })
+      }),
     )
     .query(async (req) => {
       return await req.ctx.prisma.timer.findUnique({
@@ -46,7 +45,7 @@ export const timerRouter = createTRPCRouter({
       z.object({
         totalTime: z.number(),
         title: z.string(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timer.update({
@@ -67,7 +66,7 @@ export const timerRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         updatedAt: z.number(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timer.update({
@@ -88,7 +87,7 @@ export const timerRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string(),
-      })
+      }),
     )
     .mutation(async (req) => {
       return await req.ctx.prisma.timer.update({
@@ -108,7 +107,7 @@ export const timerRouter = createTRPCRouter({
     .input(
       z.object({
         timerTitle: z.string(),
-      })
+      }),
     )
     .query(async (req) => {
       return await req.ctx.prisma.timerSessions.aggregate({
@@ -127,7 +126,7 @@ export const timerRouter = createTRPCRouter({
       z.object({
         page: z.number(),
         limit: z.number(),
-      })
+      }),
     )
     .query(async (req) => {
       return await req.ctx.prisma.timer.findMany({

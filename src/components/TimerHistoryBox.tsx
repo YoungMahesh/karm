@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { type SetStateAction, useEffect, useState } from "react";
-// import { trpc } from "../utils/trpc";
 import {
   TrashIcon,
   PencilIcon,
@@ -116,7 +115,7 @@ export default function TimerHistoryBox({
           </td>
           <td>
             {isDeleting ? (
-              <button className="loading btn-error btn" />
+              <button className="btn btn-error loading" />
             ) : (
               <TrashIcon
                 className="h-6 w-6 cursor-pointer text-red-600"
@@ -128,15 +127,21 @@ export default function TimerHistoryBox({
       ) : (
         <>
           <td>
-            <DateTimePicker onChange={(e: SetStateAction<Date | null>) => setStartTE(e)} value={startTE} />
+            <DateTimePicker
+              onChange={(e: SetStateAction<Date | null>) => setStartTE(e)}
+              value={startTE}
+            />
           </td>
           <td>
-            <DateTimePicker onChange={(e: SetStateAction<Date | null>) => setEndTE(e)} value={endTE} />
+            <DateTimePicker
+              onChange={(e: SetStateAction<Date | null>) => setEndTE(e)}
+              value={endTE}
+            />
           </td>
           <td>{secondsToHours(timePassedE)}</td>
           <td>
             {isSaving ? (
-              <button className="btn-outlinewww loading btn" />
+              <button className="btn-outlinewww btn loading" />
             ) : (
               <BookmarkIcon
                 className="h-6 w-6 cursor-pointer text-blue-600"
